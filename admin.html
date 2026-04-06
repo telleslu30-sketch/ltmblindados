@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTM Automotive — Painel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C9A84C;--gold-light:#E8D5A3;--gold-dim:rgba(201,168,76,0.15);
+  --black:#080808;--dark:#111;--dark2:#181818;--dark3:#222;
+  --text:#D0C9C0;--muted:#6A6560;--white:#F5F2ED;
+  --red:#e53935;--green:#43a047;
+}
+body{background:var(--black);color:var(--text);font-family:'Montserrat',sans-serif;font-weight:300;min-height:100vh;}
+
+/* LOGIN */
+#login-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 40%,rgba(201,168,76,0.06) 0%,transparent 60%),var(--black);
+}
+.login-box{
+  background:var(--dark2);border:1px solid var(--gold-dim);padding:56px 48px;
+  max-width:400px;width:100%;position:relative;
+}
+.login-box::before{content:'';position:absolute;top:-1px;right:-1px;width:32px;height:32px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);}
+.login-box::after{content:'';position:absolute;bottom:-1px;left:-1px;width:32px;height:32px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold);}
+.login-logo{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:6px;color:var(--gold);margin-bottom:32px;display:flex;align-items:center;gap:10px;}
+.login-logo svg{flex-shrink:0;}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--white);margin-bottom:6px;}
+.login-sub{font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:32px;}
+.login-error{background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.3);color:#ef9a9a;padding:12px 16px;font-size:10px;margin-bottom:16px;display:none;}
+.login-error.show{display:block;}
+.fl{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:block;}
+.fi{background:var(--dark);border:1px solid rgba(201,168,76,0.12);padding:13px 16px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:13px;outline:none;transition:border 0.3s;width:100%;letter-spacing:4px;}
+.fi:focus{border-color:rgba(201,168,76,0.5);}
+.fi::placeholder{color:var(--muted);letter-spacing:1px;font-size:11px;}
+.login-btn{background:var(--gold);color:var(--black);border:none;padding:15px;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;width:100%;margin-top:16px;transition:all 0.3s;}
+.login-btn:hover{background:var(--gold-light);}
+
+/* ADMIN */
+#admin-screen{display:none;}
+.topbar{background:var(--dark2);border-bottom:1px solid var(--gold-dim);padding:14px 40px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.topbar-logo{font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:4px;color:var(--white);}
+.topbar-logo span{color:var(--gold);}
+.topbar-right{display:flex;gap:12px;align-items:center;}
+.topbar-user{font-size:9px;letter-spacing:2px;color:var(--muted);}
+.logout-btn{background:none;border:1px solid rgba(229,57,53,0.35);color:var(--red);padding:7px 14px;font-size:8px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.3s;}
+.logout-btn:hover{background:var(--red);color:white;}
+.site-link{background:none;border:1px solid var(--gold-dim);color:var(--gold);padding:7px 14px;font-size:8px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.3s;text-decoration:none;}
+.site-link:hover{background:var(--gold);color:var(--black);}
+
+.admin-body{padding:40px;}
+.atabs{display:flex;gap:2px;margin-bottom:28px;border-bottom:1px solid var(--gold-dim);}
+.atab{padding:13px 24px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;font-family:'Montserrat',sans-serif;transition:all 0.3s;margin-bottom:-1px;}
+.atab:hover{color:var(--text);}
+.atab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.apanel{display:none;}
+.apanel.active{display:block;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:28px;}
+.stat-box{background:var(--dark2);border:1px solid var(--gold-dim);padding:22px;text-align:center;}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--gold);line-height:1;margin-bottom:8px;}
+.stat-l{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+
+/* SECTIONS */
+.asec{background:var(--dark2);border:1px solid var(--gold-dim);padding:28px;margin-bottom:16px;}
+.asec-title{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--white);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(201,168,76,0.08);}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+
+/* PROFIT */
+.profit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:12px;}
+.profit-box{background:var(--dark3);border:1px solid rgba(201,168,76,0.12);padding:16px;text-align:center;}
+.profit-label{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.profit-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);}
+.profit-val.loss{color:var(--red);}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed rgba(201,168,76,0.2);padding:40px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;margin-bottom:14px;}
+.upload-zone:hover,.upload-zone.over{border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.02);}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:28px;margin-bottom:8px;opacity:0.3;}
+.upload-txt{font-size:11px;color:var(--muted);line-height:1.8;}
+.upload-txt strong{color:var(--gold);font-weight:500;}
+.pcount{font-size:9px;color:var(--muted);margin-bottom:12px;}
+.pcount span{color:var(--gold);}
+.ppgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;}
+.ppitem{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid var(--gold-dim);}
+.ppitem img{width:100%;height:100%;object-fit:cover;}
+.pprm{position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(229,57,53,0.9);color:white;border:none;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.ppnum{position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,0.75);color:var(--gold);font-size:7px;padding:2px 5px;}
+
+/* UPGRADES */
+.ugl{margin-bottom:10px;}
+.ui{display:flex;gap:7px;margin-bottom:7px;align-items:center;}
+.ui .fi{flex:1;}
+.urm{width:34px;height:34px;background:none;border:1px solid rgba(229,57,53,0.3);color:var(--red);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;}
+.urm:hover{background:var(--red);color:white;}
+.addu{background:none;border:1px dashed rgba(201,168,76,0.2);color:var(--gold);padding:9px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;width:100%;transition:all 0.3s;}
+.addu:hover{border-color:var(--gold);}
+
+/* BUTTONS */
+.savebtn{background:var(--gold);color:var(--black);border:none;padding:15px;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;width:100%;margin-top:6px;transition:all 0.3s;}
+.savebtn:hover{background:var(--gold-light);}
+.alert{padding:12px 16px;font-size:10px;letter-spacing:1px;margin-bottom:14px;display:none;}
+.alert.success{background:rgba(67,160,71,0.1);border:1px solid rgba(67,160,71,0.3);color:#a5d6a7;}
+.alert.error{background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.3);color:#ef9a9a;}
+.alert.show{display:block;}
+
+/* MANAGE */
+.mlist{display:flex;flex-direction:column;gap:8px;}
+.mitem{background:var(--dark);border:1px solid rgba(201,168,76,0.1);padding:16px 20px;display:flex;align-items:center;gap:16px;transition:border 0.3s;}
+.mitem:hover{border-color:rgba(201,168,76,0.25);}
+.mthumb{width:64px;height:48px;object-fit:cover;border:1px solid var(--gold-dim);flex-shrink:0;background:var(--dark3);}
+.minfo{flex:1;}
+.mname{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--white);margin-bottom:3px;}
+.mmeta{font-size:9px;color:var(--muted);line-height:1.7;}
+.mprofit{font-size:10px;color:var(--green);margin-top:2px;}
+.mprofit.loss{color:var(--red);}
+.mactions{display:flex;gap:6px;flex-wrap:wrap;}
+.mbtn{padding:7px 12px;font-size:8px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.3s;}
+.mbtn-sold{background:none;border:1px solid rgba(229,57,53,0.3) !important;color:var(--red);}
+.mbtn-sold:hover,.mbtn-sold.active{background:var(--red);color:white;}
+.mbtn-sold.active{border-color:var(--green) !important;background:none;color:var(--green);}
+.mbtn-sold.active:hover{background:var(--green);color:white;}
+.mbtn-del{background:none;border:1px solid rgba(229,57,53,0.2) !important;color:rgba(229,57,53,0.5);}
+.mbtn-del:hover{background:var(--red);color:white;border-color:var(--red) !important;}
+
+/* METRICAS */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.metric-card{background:var(--dark2);border:1px solid var(--gold-dim);padding:24px;}
+.metric-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(201,168,76,0.06);}
+.metric-row:last-child{border-bottom:none;}
+.metric-key{font-size:10px;color:var(--muted);}
+.metric-value{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--white);}
+.metric-value.gold{color:var(--gold);}
+.car-rank{display:flex;flex-direction:column;gap:6px;}
+.rank-item{display:flex;align-items:center;gap:12px;padding:10px;background:var(--dark3);border-left:2px solid var(--gold);}
+.rank-num{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);width:24px;flex-shrink:0;}
+.rank-name{flex:1;font-size:11px;color:var(--text);}
+.rank-views{font-size:10px;color:var(--muted);}
+
+@media(max-width:768px){
+  .stats-grid,.profit-grid{grid-template-columns:1fr 1fr;}
+  .frow,.frow3{grid-template-columns:1fr;}
+  .metrics-grid{grid-template-columns:1fr;}
+  .topbar{padding:12px 16px;}
+  .admin-body{padding:20px 16px;}
+  .ppgrid{grid-template-columns:repeat(3,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+        <rect x="1" y="1" width="34" height="34" stroke="#C9A84C" stroke-width="1"/>
+        <rect x="5" y="5" width="26" height="26" stroke="#C9A84C" stroke-width="0.4" stroke-opacity="0.4"/>
+        <text x="18" y="24" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="13" fill="#C9A84C" letter-spacing="1">LTM</text>
+      </svg>
+      LTM AUTOMOTIVE
+    </div>
+    <div class="login-title">Painel Admin</div>
+    <div class="login-sub">Acesso exclusivo · Lucas Telles</div>
+    <div id="lerr" class="login-error"></div>
+    <div class="fg" style="margin-bottom:0;">
+      <label class="fl">Senha de acesso</label>
+      <input class="fi" id="lpass" type="password" placeholder="Digite sua senha" autocomplete="new-password" onkeydown="if(event.key==='Enter')entrar()">
+    </div>
+    <button class="login-btn" onclick="entrar()">Entrar no Painel →</button>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">LTM <span>Automotive.</span></div>
+    <div class="topbar-right">
+      <span class="topbar-user">Lucas Telles · Admin</span>
+      <a href="index.html" class="site-link">← Ver Site</a>
+      <button class="logout-btn" onclick="sair()">Sair</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- STATS TOPO -->
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <!-- TABS -->
+    <div class="atabs">
+      <button class="atab active" onclick="showTab('add')">+ Adicionar Veículo</button>
+      <button class="atab" onclick="showTab('manage')">Gerenciar Estoque</button>
+      <button class="atab" onclick="showTab('metrics')">Métricas</button>
+    </div>
+
+    <!-- ═══ ADD ═══ -->
+    <div class="apanel active" id="tab-add">
+      <div id="form-alert" class="alert"></div>
+
+      <div class="asec">
+        <div class="asec-title">📸 Fotos do Veículo <span style="font-family:Montserrat;font-size:9px;color:var(--muted);font-weight:300;">— máx. 15 fotos</span></div>
+        <div class="pcount"><span id="photo-count">0</span> / 15 fotos adicionadas</div>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="photo-input" accept="image/*" multiple onchange="handlePhotos(this.files)">
+          <div class="upload-icon">📁</div>
+          <div class="upload-txt"><strong>Clique ou arraste as fotos aqui</strong><br>JPG, PNG, WEBP — até 15 fotos por veículo</div>
+        </div>
+        <div class="ppgrid" id="photos-preview"></div>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">🚗 Informações do Veículo</div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Marca *</label><input class="fi" id="f-brand" type="text" placeholder="Ferrari"></div>
+          <div class="fg"><label class="fl">Modelo *</label><input class="fi" id="f-model" type="text" placeholder="F8 Spider"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Subtítulo</label><input class="fi" id="f-subtitle" type="text" placeholder="3.9 V8 Biturbo · 720 cv"></div>
+          <div class="fg"><label class="fl">Tipo</label>
+            <select class="fi" id="f-tipo" style="cursor:pointer;">
+              <option value="superesportivo">Superesportivo</option>
+              <option value="blindado">Blindado</option>
+              <option value="luxo">Luxo</option>
+              <option value="suv">SUV de Luxo</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow3">
+          <div class="fg"><label class="fl">Ano</label><input class="fi" id="f-year" type="text" placeholder="2021"></div>
+          <div class="fg"><label class="fl">Quilometragem</label><input class="fi" id="f-km" type="text" placeholder="6.500 km"></div>
+          <div class="fg"><label class="fl">Cor</label><input class="fi" id="f-color" type="text" placeholder="Rosso Corsa"></div>
+        </div>
+        <div class="frow3">
+          <div class="fg"><label class="fl">Motor</label><input class="fi" id="f-engine" type="text" placeholder="3.9 V8 Biturbo"></div>
+          <div class="fg"><label class="fl">Potência</label><input class="fi" id="f-power" type="text" placeholder="720 cv"></div>
+          <div class="fg"><label class="fl">Câmbio</label><input class="fi" id="f-gear" type="text" placeholder="F1-DCT 7 marchas"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">0 — 100 km/h</label><input class="fi" id="f-accel" type="text" placeholder="2,9 segundos"></div>
+          <div class="fg"><label class="fl">Velocidade Máxima</label><input class="fi" id="f-vmax" type="text" placeholder="340 km/h"></div>
+        </div>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">💰 Financeiro <span style="font-family:Montserrat;font-size:9px;color:var(--muted);font-weight:300;">— visível só para você</span></div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Preço de Venda (público) *</label><input class="fi" id="f-price" type="text" placeholder="R$ 4.199.000" oninput="calcProfit()"></div>
+          <div class="fg"><label class="fl">Custo / Preço do Lojista</label><input class="fi" id="f-cost" type="text" placeholder="R$ 3.900.000" oninput="calcProfit()"></div>
+        </div>
+        <div class="profit-grid">
+          <div class="profit-box"><div class="profit-label">Lucro Bruto</div><div class="profit-val" id="p-lucro">—</div></div>
+          <div class="profit-box"><div class="profit-label">Margem %</div><div class="profit-val" id="p-margem">—</div></div>
+          <div class="profit-box"><div class="profit-label">Markup %</div><div class="profit-val" id="p-markup">—</div></div>
+          <div class="profit-box"><div class="profit-label">Status</div><div class="profit-val" id="p-status">—</div></div>
+        </div>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">⚡ Upgrades & Diferenciais</div>
+        <div class="ugl" id="upgrades-list">
+          <div class="ui"><input class="fi" type="text" placeholder="Ex: Escape Akrapovic — performance sonora"><button class="urm" onclick="rmUpgrade(this)">×</button></div>
+        </div>
+        <button class="addu" onclick="addUpgrade()">+ Adicionar item</button>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">🏷 Selos</div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Selo 1</label><input class="fi" id="b1" type="text" placeholder="Importação Oficial"></div>
+          <div class="fg"><label class="fl">Selo 2</label><input class="fi" id="b2" type="text" placeholder="PPF Full"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Selo 3</label><input class="fi" id="b3" type="text" placeholder="Revisado Concessionária"></div>
+          <div class="fg"><label class="fl">Selo 4</label><input class="fi" id="b4" type="text" placeholder="Entrega Nacional"></div>
+        </div>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">⭐ Destaque</div>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="f-destaque" style="width:16px;height:16px;accent-color:var(--gold);cursor:pointer;">
+          <span style="font-size:11px;color:var(--muted);">Exibir este veículo nos destaques da página inicial</span>
+        </label>
+      </div>
+
+      <button class="savebtn" onclick="salvarCarro()">Publicar no Estoque →</button>
+    </div>
+
+    <!-- ═══ MANAGE ═══ -->
+    <div class="apanel" id="tab-manage">
+      <div class="mlist" id="manage-list"></div>
+    </div>
+
+    <!-- ═══ METRICS ═══ -->
+    <div class="apanel" id="tab-metrics">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Resumo Financeiro</div>
+          <div id="metric-financial"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Engajamento</div>
+          <div id="metric-engagement"></div>
+        </div>
+      </div>
+      <div class="asec">
+        <div class="asec-title">🏆 Ranking de Visualizações</div>
+        <div class="car-rank" id="car-rank"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─── STATE ───
+const PASS = '221195';
+let cars = JSON.parse(localStorage.getItem('ltm_cars_v2') || '[]');
+let photos = [];
+
+// ─── LOGIN ───
+function entrar() {
+  const p = document.getElementById('lpass').value.replace(/\s/g,'');
+  const err = document.getElementById('lerr');
+  if (p === PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    renderStats();
+    renderManage();
+    renderMetrics();
+  } else {
+    err.textContent = 'Senha incorreta. Tente novamente.';
+    err.classList.add('show');
+    document.getElementById('lpass').value = '';
+    document.getElementById('lpass').focus();
+  }
+}
+
+function sair() {
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('lpass').value = '';
+}
+
+document.getElementById('lpass').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
+
+// ─── TABS ───
+function showTab(id) {
+  document.querySelectorAll('.apanel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  const idx = {add:0,manage:1,metrics:2}[id];
+  document.querySelectorAll('.atab')[idx].classList.add('active');
+  if (id==='manage') renderManage();
+  if (id==='metrics') renderMetrics();
+}
+
+// ─── STATS ───
+function renderStats() {
+  const total = cars.length;
+  const disp = cars.filter(c=>!c.sold).length;
+  const vendidos = cars.filter(c=>c.sold).length;
+  const views = cars.reduce((a,c)=>a+(c.views||0),0);
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-box"><div class="stat-n">${total}</div><div class="stat-l">Total Cadastrados</div></div>
+    <div class="stat-box"><div class="stat-n">${disp}</div><div class="stat-l">Disponíveis</div></div>
+    <div class="stat-box"><div class="stat-n">${vendidos}</div><div class="stat-l">Vendidos</div></div>
+    <div class="stat-box"><div class="stat-n">${views}</div><div class="stat-l">Visualizações</div></div>`;
+}
+
+// ─── UPLOAD ───
+function handlePhotos(files) {
+  const rem = 15 - photos.length;
+  const add = Math.min(files.length, rem);
+  if (!add) { showAlert('Limite de 15 fotos atingido.','error'); return; }
+  let done = 0;
+  for (let i=0;i<add;i++) {
+    const r = new FileReader();
+    r.onload = e => { photos.push(e.target.result); done++; if(done===add) renderPreviews(); };
+    r.readAsDataURL(files[i]);
+  }
+}
+
+function renderPreviews() {
+  document.getElementById('photo-count').textContent = photos.length;
+  document.getElementById('photos-preview').innerHTML = photos.map((s,i)=>
+    `<div class="ppitem"><img src="${s}"><button class="pprm" onclick="rmPhoto(${i})">×</button><div class="ppnum">${i+1}</div></div>`
+  ).join('');
+}
+
+function rmPhoto(i) { photos.splice(i,1); renderPreviews(); }
+
+const uz = document.getElementById('upload-zone');
+uz.addEventListener('dragover', e=>{e.preventDefault();uz.classList.add('over');});
+uz.addEventListener('dragleave', ()=>uz.classList.remove('over'));
+uz.addEventListener('drop', e=>{e.preventDefault();uz.classList.remove('over');handlePhotos(e.dataTransfer.files);});
+
+// ─── PROFIT ───
+function parseMoney(s) {
+  return parseFloat(s.replace(/[R$\s.]/g,'').replace(',','.')) || 0;
+}
+
+function calcProfit() {
+  const price = parseMoney(document.getElementById('f-price').value);
+  const cost = parseMoney(document.getElementById('f-cost').value);
+  if (!price||!cost) {
+    ['p-lucro','p-margem','p-markup','p-status'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.textContent='—';el.className='profit-val';
+    });
+    return;
+  }
+  const lucro = price - cost;
+  const margem = ((lucro/price)*100).toFixed(1);
+  const markup = ((lucro/cost)*100).toFixed(1);
+  const pos = lucro >= 0;
+  document.getElementById('p-lucro').textContent = 'R$ '+Math.abs(lucro).toLocaleString('pt-BR');
+  document.getElementById('p-margem').textContent = margem+'%';
+  document.getElementById('p-markup').textContent = markup+'%';
+  document.getElementById('p-status').textContent = pos?'✅ Positivo':'❌ Negativo';
+  ['p-lucro','p-margem','p-markup','p-status'].forEach(id=>{
+    document.getElementById(id).className='profit-val'+(pos?'':' loss');
+  });
+}
+
+// ─── UPGRADES ───
+function addUpgrade() {
+  const d=document.createElement('div');d.className='ui';
+  d.innerHTML=`<input class="fi" type="text" placeholder="Descreva o diferencial"><button class="urm" onclick="rmUpgrade(this)">×</button>`;
+  document.getElementById('upgrades-list').appendChild(d);
+}
+function rmUpgrade(btn) { if(document.querySelectorAll('.ui').length>1) btn.parentElement.remove(); }
+
+// ─── SALVAR CARRO ───
+function salvarCarro() {
+  const brand = document.getElementById('f-brand').value.trim();
+  const model = document.getElementById('f-model').value.trim();
+  const price = document.getElementById('f-price').value.trim();
+  if (!brand||!model||!price) { showAlert('Preencha Marca, Modelo e Preço.','error'); return; }
+  if (!photos.length) { showAlert('Adicione pelo menos 1 foto.','error'); return; }
+  const upgrades = [...document.querySelectorAll('.ui input')].map(i=>i.value.trim()).filter(Boolean);
+  const badges = ['b1','b2','b3','b4'].map(id=>document.getElementById(id).value.trim()).filter(Boolean);
+  const car = {
+    id: Date.now().toString(), brand, model,
+    subtitle: document.getElementById('f-subtitle').value.trim(),
+    tipo: document.getElementById('f-tipo').value,
+    price, cost: document.getElementById('f-cost').value.trim(),
+    year: document.getElementById('f-year').value.trim(),
+    km: document.getElementById('f-km').value.trim(),
+    color: document.getElementById('f-color').value.trim(),
+    engine: document.getElementById('f-engine').value.trim(),
+    power: document.getElementById('f-power').value.trim(),
+    gear: document.getElementById('f-gear').value.trim(),
+    accel: document.getElementById('f-accel').value.trim(),
+    vmax: document.getElementById('f-vmax').value.trim(),
+    upgrades, badges,
+    destaque: document.getElementById('f-destaque').checked,
+    sold: false, views: 0,
+    photos: [...photos]
+  };
+  cars.push(car);
+  salvar();
+  showAlert('✅ Veículo publicado com sucesso no estoque!','success');
+  resetForm();
+  renderStats();
+  setTimeout(()=>showTab('manage'), 1800);
+}
+
+function salvar() { localStorage.setItem('ltm_cars_v2', JSON.stringify(cars)); }
+
+function resetForm() {
+  ['f-brand','f-model','f-subtitle','f-price','f-cost','f-year','f-km','f-color','f-engine','f-power','f-gear','f-accel','f-vmax','b1','b2','b3','b4'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-destaque').checked=false;
+  photos=[]; renderPreviews(); calcProfit();
+  document.getElementById('upgrades-list').innerHTML=`<div class="ui"><input class="fi" type="text" placeholder="Ex: Escape Akrapovic — performance sonora"><button class="urm" onclick="rmUpgrade(this)">×</button></div>`;
+}
+
+function showAlert(msg,type) {
+  const el=document.getElementById('form-alert');
+  el.textContent=msg;el.className='alert '+type+' show';
+  setTimeout(()=>el.classList.remove('show'),4000);
+}
+
+// ─── MANAGE ───
+function renderManage() {
+  const list = document.getElementById('manage-list');
+  if (!cars.length) { list.innerHTML='<div style="padding:60px;text-align:center;color:var(--muted);">Nenhum veículo cadastrado ainda.</div>'; return; }
+  list.innerHTML = cars.map(car => {
+    const lucro = car.cost ? parseMoney(car.price) - parseMoney(car.cost) : null;
+    const lucroTxt = lucro !== null ? `<div class="mprofit${lucro<0?' loss':''}">Lucro: R$ ${Math.abs(lucro).toLocaleString('pt-BR')} ${lucro>=0?'✅':'❌'}</div>` : '';
+    return `<div class="mitem">
+      ${car.photos.length?`<img class="mthumb" src="${car.photos[0]}">`:`<div class="mthumb" style="display:flex;align-items:center;justify-content:center;font-size:20px;">🏎</div>`}
+      <div class="minfo">
+        <div class="mname">${car.brand} ${car.model}</div>
+        <div class="mmeta">${car.year||''} ${car.km?'· '+car.km:''} · ${car.price} · 👁 ${car.views||0} views · ${car.sold?'🔴 Vendido':'🟢 Disponível'} · ${car.photos.length} foto(s)${car.destaque?' · ⭐ Destaque':''}</div>
+        ${lucroTxt}
+      </div>
+      <div class="mactions">
+        <button class="mbtn mbtn-sold${car.sold?' active':''}" onclick="toggleSold('${car.id}')">${car.sold?'Reativar':'Marcar Vendido'}</button>
+        <button class="mbtn mbtn-del" onclick="deletar('${car.id}')">Excluir</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSold(id) {
+  const car = cars.find(c=>c.id===id);
+  if(car){car.sold=!car.sold;salvar();renderManage();renderStats();}
+}
+
+function deletar(id) {
+  if(!confirm('Remover este veículo do estoque?')) return;
+  cars = cars.filter(c=>c.id!==id);
+  salvar(); renderManage(); renderStats();
+}
+
+// ─── METRICS ───
+function renderMetrics() {
+  const total = cars.length;
+  const disp = cars.filter(c=>!c.sold).length;
+  const vendidos = cars.filter(c=>c.sold).length;
+  const views = cars.reduce((a,c)=>a+(c.views||0),0);
+  const lucroTotal = cars.reduce((a,c)=>{
+    if(!c.cost) return a;
+    return a + parseMoney(c.price) - parseMoney(c.cost);
+  },0);
+  const lucroRealizado = cars.filter(c=>c.sold).reduce((a,c)=>{
+    if(!c.cost) return a;
+    return a + parseMoney(c.price) - parseMoney(c.cost);
+  },0);
+
+  document.getElementById('metric-financial').innerHTML = `
+    <div class="metric-row"><span class="metric-key">Estoque total (valor)</span><span class="metric-value gold">${cars.reduce((a,c)=>a+parseMoney(c.price),0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</span></div>
+    <div class="metric-row"><span class="metric-key">Lucro potencial total</span><span class="metric-value gold">R$ ${lucroTotal.toLocaleString('pt-BR')}</span></div>
+    <div class="metric-row"><span class="metric-key">Lucro realizado (vendidos)</span><span class="metric-value gold">R$ ${lucroRealizado.toLocaleString('pt-BR')}</span></div>
+    <div class="metric-row"><span class="metric-key">Veículos com custo cadastrado</span><span class="metric-value">${cars.filter(c=>c.cost).length} / ${total}</span></div>`;
+
+  document.getElementById('metric-engagement').innerHTML = `
+    <div class="metric-row"><span class="metric-key">Total de visualizações</span><span class="metric-value gold">${views}</span></div>
+    <div class="metric-row"><span class="metric-key">Média por veículo</span><span class="metric-value">${total?Math.round(views/total):0}</span></div>
+    <div class="metric-row"><span class="metric-key">Carros em destaque</span><span class="metric-value">${cars.filter(c=>c.destaque).length}</span></div>
+    <div class="metric-row"><span class="metric-key">Taxa de conversão (vendidos)</span><span class="metric-value">${total?((vendidos/total)*100).toFixed(1):0}%</span></div>`;
+
+  const ranked = [...cars].sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,5);
+  document.getElementById('car-rank').innerHTML = ranked.length
+    ? ranked.map((car,i)=>`<div class="rank-item"><div class="rank-num">${i+1}</div><div class="rank-name">${car.brand} ${car.model} ${car.year?'('+car.year+')':''}</div><div class="rank-views">👁 ${car.views||0} views</div></div>`).join('')
+    : '<div style="color:var(--muted);font-size:11px;padding:20px;">Nenhum dado ainda.</div>';
+}
+</script>
+</body>
+</html>
