@@ -3,1294 +3,1161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LTM — Blindados & Superesportivos</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>LTM Automotive — Blindados & Superesportivos</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E8D5A3;
-    --black: #0A0A0A;
-    --dark: #111111;
-    --dark2: #1A1A1A;
-    --gray: #2A2A2A;
-    --text: #D0C9C0;
-    --text-muted: #7A7570;
-    --white: #F5F2ED;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--text);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: none;
-  }
-
-  /* CURSOR CUSTOMIZADO */
-  .cursor {
-    width: 8px; height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s;
-  }
-  .cursor-ring {
-    width: 36px; height: 36px;
-    border: 1px solid var(--gold);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: all 0.15s ease;
-    opacity: 0.6;
-  }
-
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.4;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 28px 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
-  }
-
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 300;
-    letter-spacing: 6px;
-    color: var(--white);
-    text-decoration: none;
-  }
-
-  .nav-logo span { color: var(--gold); }
-
-  .nav-links {
-    display: flex;
-    gap: 48px;
-    list-style: none;
-  }
-
-  .nav-links a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-
-  .nav-links a:hover { color: var(--gold); }
-
-  .nav-cta {
-    border: 1px solid var(--gold);
-    color: var(--gold) !important;
-    padding: 10px 24px;
-    letter-spacing: 2px !important;
-    transition: all 0.3s !important;
-  }
-
-  .nav-cta:hover {
-    background: var(--gold) !important;
-    color: var(--black) !important;
-  }
-
-  /* HERO */
-  .hero {
-    height: 100vh;
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    padding: 0 60px 100px;
-    overflow: hidden;
-  }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    background: 
-      radial-gradient(ellipse at 70% 40%, rgba(201,168,76,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
-      linear-gradient(135deg, #0A0A0A 0%, #141414 50%, #0D0D0D 100%);
-  }
-
-  .hero-line {
-    position: absolute;
-    top: 0; bottom: 0;
-    left: 55%;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.2) 30%, rgba(201,168,76,0.4) 60%, transparent);
-    animation: lineReveal 2s ease forwards;
-  }
-
-  @keyframes lineReveal {
-    from { transform: scaleY(0); transform-origin: top; }
-    to { transform: scaleY(1); }
-  }
-
-  .hero-car-placeholder {
-    position: absolute;
-    right: -20px; top: 50%;
-    transform: translateY(-50%);
-    width: 55%;
-    height: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.15;
-  }
-
-  .hero-car-placeholder svg {
-    width: 100%;
-    height: auto;
-    fill: var(--gold);
-  }
-
-  /* Silhueta de carro */
-  .car-silhouette {
-    position: absolute;
-    right: 40px; top: 50%;
-    transform: translateY(-52%);
-    width: 52%;
-    height: 55%;
-    background: linear-gradient(135deg, rgba(201,168,76,0.03), rgba(201,168,76,0.08));
-    border: 1px solid rgba(201,168,76,0.1);
-    clip-path: polygon(5% 70%, 15% 40%, 28% 25%, 55% 20%, 75% 22%, 90% 35%, 98% 60%, 98% 75%, 2% 75%);
-    animation: fadeIn 2s ease 0.5s both;
-  }
-
-  .car-glow {
-    position: absolute;
-    right: 5%; top: 50%;
-    transform: translateY(-50%);
-    width: 45%;
-    height: 300px;
-    background: radial-gradient(ellipse, rgba(201,168,76,0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 600px;
-    animation: slideUp 1.2s ease both;
-  }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(40px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .hero-tag {
-    font-size: 10px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .hero-tag::before {
-    content: '';
-    width: 40px; height: 1px;
-    background: var(--gold);
-    display: block;
-  }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(52px, 7vw, 90px);
-    font-weight: 300;
-    line-height: 1.0;
-    color: var(--white);
-    margin-bottom: 32px;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--gold);
-  }
-
-  .hero-subtitle {
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    line-height: 2;
-    color: var(--text-muted);
-    max-width: 420px;
-    margin-bottom: 56px;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 24px;
-    align-items: center;
-  }
-
-  .btn-primary {
-    background: var(--gold);
-    color: var(--black);
-    padding: 16px 40px;
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    transition: all 0.3s;
-    display: inline-block;
-  }
-
-  .btn-primary:hover {
-    background: var(--gold-light);
-    transform: translateY(-2px);
-  }
-
-  .btn-ghost {
-    color: var(--text-muted);
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: color 0.3s;
-  }
-
-  .btn-ghost:hover { color: var(--gold); }
-
-  .btn-ghost::after {
-    content: '→';
-    transition: transform 0.3s;
-  }
-
-  .btn-ghost:hover::after { transform: translateX(4px); }
-
-  /* SCROLL INDICATOR */
-  .scroll-indicator {
-    position: absolute;
-    bottom: 40px; right: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0.4;
-  }
-
-  .scroll-indicator span {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    writing-mode: vertical-rl;
-    color: var(--text-muted);
-  }
-
-  .scroll-line {
-    width: 1px;
-    height: 60px;
-    background: linear-gradient(to bottom, var(--gold), transparent);
-    animation: scrollPulse 2s infinite;
-  }
-
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-
-  /* STATS */
-  .stats {
-    padding: 80px 60px;
-    background: var(--dark2);
-    border-top: 1px solid rgba(201,168,76,0.1);
-    border-bottom: 1px solid rgba(201,168,76,0.1);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-  }
-
-  .stat {
-    padding: 40px;
-    border-right: 1px solid rgba(201,168,76,0.1);
-    text-align: center;
-    transition: background 0.3s;
-  }
-
-  .stat:last-child { border-right: none; }
-  .stat:hover { background: rgba(201,168,76,0.03); }
-
-  .stat-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 52px;
-    font-weight: 300;
-    color: var(--gold);
-    display: block;
-    line-height: 1;
-    margin-bottom: 12px;
-  }
-
-  .stat-label {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-
-  /* ABOUT */
-  .about {
-    padding: 140px 60px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 120px;
-    align-items: center;
-  }
-
-  .about-tag {
-    font-size: 9px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .about-tag::before {
-    content: '';
-    width: 30px; height: 1px;
-    background: var(--gold);
-  }
-
-  .about-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 4vw, 56px);
-    font-weight: 300;
-    color: var(--white);
-    line-height: 1.15;
-    margin-bottom: 32px;
-  }
-
-  .about-title em { font-style: italic; color: var(--gold); }
-
-  .about-text {
-    font-size: 13px;
-    line-height: 2.2;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-  }
-
-  .about-signature {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
-    font-style: italic;
-    color: var(--gold);
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 1px solid rgba(201,168,76,0.2);
-  }
-
-  .about-signature small {
-    display: block;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-top: 8px;
-    font-style: normal;
-  }
-
-  .about-visual {
-    position: relative;
-    height: 500px;
-  }
-
-  .about-box {
-    position: absolute;
-    inset: 0;
-    background: var(--dark2);
-    border: 1px solid rgba(201,168,76,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .about-box-inner {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 120px;
-    font-weight: 300;
-    color: rgba(201,168,76,0.06);
-    letter-spacing: -5px;
-    line-height: 1;
-    text-align: center;
-    user-select: none;
-  }
-
-  .about-box::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(to right, transparent, var(--gold), transparent);
-  }
-
-  .about-corner {
-    position: absolute;
-    top: -1px; right: -1px;
-    width: 40px; height: 40px;
-    border-top: 2px solid var(--gold);
-    border-right: 2px solid var(--gold);
-  }
-
-  .about-corner-bl {
-    position: absolute;
-    bottom: -1px; left: -1px;
-    width: 40px; height: 40px;
-    border-bottom: 2px solid var(--gold);
-    border-left: 2px solid var(--gold);
-  }
-
-  /* SERVICES */
-  .services {
-    padding: 140px 60px;
-    background: var(--dark2);
-  }
-
-  .section-header {
-    text-align: center;
-    margin-bottom: 80px;
-  }
-
-  .section-tag {
-    font-size: 9px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
-    display: block;
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 4vw, 56px);
-    font-weight: 300;
-    color: var(--white);
-    line-height: 1.15;
-  }
-
-  .section-title em { font-style: italic; color: var(--gold); }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    margin-top: 60px;
-  }
-
-  .service-card {
-    background: var(--dark);
-    padding: 60px 48px;
-    border: 1px solid rgba(201,168,76,0.08);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s;
-  }
-
-  .service-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--gold);
-    transform: scaleX(0);
-    transition: transform 0.4s;
-    transform-origin: left;
-  }
-
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-card:hover { background: rgba(201,168,76,0.03); }
-
-  .service-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 72px;
-    font-weight: 300;
-    color: rgba(201,168,76,0.08);
-    position: absolute;
-    top: 20px; right: 30px;
-    line-height: 1;
-  }
-
-  .service-icon {
-    width: 48px; height: 48px;
-    border: 1px solid rgba(201,168,76,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 32px;
-    color: var(--gold);
-    font-size: 20px;
-    transition: all 0.3s;
-  }
-
-  .service-card:hover .service-icon {
-    background: var(--gold);
-    color: var(--black);
-    border-color: var(--gold);
-  }
-
-  .service-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 400;
-    color: var(--white);
-    margin-bottom: 16px;
-    line-height: 1.3;
-  }
-
-  .service-text {
-    font-size: 12px;
-    line-height: 2;
-    color: var(--text-muted);
-  }
-
-  /* VEHICLES SECTION */
-  .vehicles {
-    padding: 140px 60px;
-  }
-
-  .vehicles-intro {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 80px;
-  }
-
-  .vehicles-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    grid-template-rows: 300px 300px;
-    gap: 2px;
-  }
-
-  .vehicle-card {
-    background: var(--dark2);
-    border: 1px solid rgba(201,168,76,0.08);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end;
-    padding: 32px;
-    cursor: pointer;
-    transition: all 0.4s;
-  }
-
-  .vehicle-card:first-child {
-    grid-row: 1 / 3;
-  }
-
-  .vehicle-card-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(201,168,76,0.03), transparent);
-    transition: opacity 0.4s;
-  }
-
-  .vehicle-card:hover .vehicle-card-bg {
-    opacity: 0;
-    background: linear-gradient(135deg, rgba(201,168,76,0.08), transparent);
-  }
-
-  .vehicle-card:hover { border-color: rgba(201,168,76,0.3); }
-
-  .vehicle-placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 100px;
-    color: rgba(201,168,76,0.04);
-    pointer-events: none;
-  }
-
-  .vehicle-info {
-    position: relative;
-    z-index: 2;
-  }
-
-  .vehicle-tag {
-    font-size: 8px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-
-  .vehicle-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 400;
-    color: var(--white);
-  }
-
-  .vehicle-price {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 4px;
-  }
-
-  .vehicle-add-photo {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    opacity: 0.2;
-    transition: opacity 0.3s;
-  }
-
-  .vehicle-card:hover .vehicle-add-photo { opacity: 0.5; }
-
-  .vehicle-add-photo span {
-    display: block;
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-top: 8px;
-  }
-
-  /* HOW IT WORKS */
-  .process {
-    padding: 140px 60px;
-    background: var(--dark2);
-  }
-
-  .process-steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    margin-top: 80px;
-    position: relative;
-  }
-
-  .process-steps::before {
-    content: '';
-    position: absolute;
-    top: 48px; left: 10%;
-    right: 10%;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(201,168,76,0.3), transparent);
-    z-index: 0;
-  }
-
-  .step {
-    padding: 60px 40px;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-  }
-
-  .step-num {
-    width: 64px; height: 64px;
-    border: 1px solid rgba(201,168,76,0.3);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 32px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
-    color: var(--gold);
-    background: var(--dark2);
-    transition: all 0.3s;
-  }
-
-  .step:hover .step-num {
-    background: var(--gold);
-    color: var(--black);
-    border-color: var(--gold);
-  }
-
-  .step-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    color: var(--white);
-    margin-bottom: 16px;
-  }
-
-  .step-text {
-    font-size: 11px;
-    line-height: 2;
-    color: var(--text-muted);
-  }
-
-  /* CONTACT */
-  .contact {
-    padding: 140px 60px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 100px;
-    align-items: center;
-  }
-
-  .contact-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(40px, 5vw, 72px);
-    font-weight: 300;
-    color: var(--white);
-    line-height: 1.1;
-    margin-bottom: 32px;
-  }
-
-  .contact-title em { font-style: italic; color: var(--gold); }
-
-  .contact-text {
-    font-size: 13px;
-    line-height: 2.2;
-    color: var(--text-muted);
-    margin-bottom: 48px;
-  }
-
-  .contact-channels {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .contact-channel {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 20px 28px;
-    border: 1px solid rgba(201,168,76,0.12);
-    text-decoration: none;
-    transition: all 0.3s;
-    color: var(--text);
-  }
-
-  .contact-channel:hover {
-    border-color: var(--gold);
-    background: rgba(201,168,76,0.04);
-    color: var(--gold);
-  }
-
-  .channel-icon {
-    width: 40px; height: 40px;
-    border: 1px solid rgba(201,168,76,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-    transition: all 0.3s;
-  }
-
-  .contact-channel:hover .channel-icon {
-    background: var(--gold);
-    border-color: var(--gold);
-  }
-
-  .channel-info { flex: 1; }
-
-  .channel-name {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-
-  .channel-value {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    color: var(--white);
-  }
-
-  .contact-channel:hover .channel-value { color: var(--gold); }
-
-  .channel-arrow {
-    color: var(--text-muted);
-    font-size: 18px;
-    transition: transform 0.3s;
-  }
-
-  .contact-channel:hover .channel-arrow { transform: translateX(4px); color: var(--gold); }
-
-  /* FOOTER */
-  footer {
-    padding: 60px;
-    border-top: 1px solid rgba(201,168,76,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .footer-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 300;
-    letter-spacing: 6px;
-    color: var(--white);
-  }
-
-  .footer-logo span { color: var(--gold); }
-
-  .footer-copy {
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    text-align: center;
-  }
-
-  .footer-links {
-    display: flex;
-    gap: 32px;
-  }
-
-  .footer-links a {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-
-  .footer-links a:hover { color: var(--gold); }
-
-  /* DIVIDER */
-  .gold-divider {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(to right, transparent, rgba(201,168,76,0.4), transparent);
-  }
-
-  /* ANIMATIONS ON SCROLL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* MOBILE */
-  @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
-    .nav-links { display: none; }
-    .hero { padding: 0 24px 80px; }
-    .hero-line { display: none; }
-    .car-silhouette { display: none; }
-    .stats { grid-template-columns: repeat(2, 1fr); padding: 40px 24px; }
-    .about { grid-template-columns: 1fr; gap: 60px; padding: 80px 24px; }
-    .about-visual { display: none; }
-    .services { padding: 80px 24px; }
-    .services-grid { grid-template-columns: 1fr; }
-    .vehicles { padding: 80px 24px; }
-    .vehicles-intro { flex-direction: column; align-items: flex-start; gap: 24px; }
-    .vehicles-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
-    .vehicle-card:first-child { grid-row: auto; }
-    .process { padding: 80px 24px; }
-    .process-steps { grid-template-columns: 1fr 1fr; }
-    .process-steps::before { display: none; }
-    .contact { grid-template-columns: 1fr; gap: 60px; padding: 80px 24px; }
-    footer { flex-direction: column; gap: 24px; padding: 40px 24px; text-align: center; }
-    .footer-links { justify-content: center; }
-  }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C9A84C;--gold-light:#E8D5A3;--gold-dim:rgba(201,168,76,0.15);
+  --black:#080808;--dark:#111;--dark2:#181818;--dark3:#222;
+  --text:#D0C9C0;--muted:#6A6560;--white:#F5F2ED;
+  --red:#e53935;--green:#43a047;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'Montserrat',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--black);}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);}
+
+/* ── LOGO SVG ── */
+.logo-svg{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-mark{width:36px;height:36px;flex-shrink:0;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;letter-spacing:3px;color:var(--white);}
+.logo-text span{color:var(--gold);}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:18px 56px;display:flex;justify-content:space-between;align-items:center;transition:all 0.4s;}
+nav.scrolled{background:rgba(8,8,8,0.97);border-bottom:1px solid var(--gold-dim);backdrop-filter:blur(12px);}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:9px;letter-spacing:3px;text-transform:uppercase;transition:color 0.3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transition:transform 0.3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-links a.active{color:var(--gold);}
+.nav-links a.active::after{transform:scaleX(1);}
+.nav-cta{border:1px solid var(--gold) !important;color:var(--gold) !important;padding:8px 20px;}
+.nav-cta:hover{background:var(--gold) !important;color:var(--black) !important;}
+.nav-login{background:none;border:1px solid var(--gold-dim);color:var(--muted);padding:8px 16px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.3s;}
+.nav-login:hover{border-color:var(--gold);color:var(--gold);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{width:22px;height:1px;background:var(--gold);transition:all 0.3s;}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ══════════════════════════════════
+   INÍCIO
+══════════════════════════════════ */
+#page-home{}
+.hero{height:100vh;position:relative;display:flex;align-items:flex-end;padding:0 56px 90px;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 65% 40%,rgba(201,168,76,0.07) 0%,transparent 55%),linear-gradient(135deg,#080808 0%,#131313 60%,#0a0a0a 100%);}
+.hero-vline{position:absolute;top:0;bottom:0;left:52%;width:1px;background:linear-gradient(to bottom,transparent,rgba(201,168,76,0.25) 30%,rgba(201,168,76,0.5) 65%,transparent);animation:vline 2s ease forwards;}
+@keyframes vline{from{transform:scaleY(0);transform-origin:top;}to{transform:scaleY(1);}}
+.hero-glow{position:absolute;right:4%;top:50%;transform:translateY(-50%);width:44%;height:320px;background:radial-gradient(ellipse,rgba(201,168,76,0.055) 0%,transparent 70%);pointer-events:none;}
+.hero-car-shape{position:absolute;right:32px;top:50%;transform:translateY(-54%);width:50%;height:58%;background:linear-gradient(135deg,rgba(201,168,76,0.025),rgba(201,168,76,0.07));border:1px solid rgba(201,168,76,0.08);clip-path:polygon(4% 70%,14% 38%,27% 23%,54% 18%,76% 21%,92% 36%,99% 62%,99% 78%,1% 78%);animation:fadeUp 2s ease 0.3s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(-48%) translateX(20px);}to{opacity:1;transform:translateY(-54%) translateX(0);}}
+.hero-content{position:relative;z-index:2;max-width:580px;animation:slideUp 1.2s ease both;}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.hero-tag{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:22px;display:flex;align-items:center;gap:14px;}
+.hero-tag::before{content:'';width:36px;height:1px;background:var(--gold);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(50px,7vw,88px);font-weight:300;line-height:1.0;color:var(--white);margin-bottom:28px;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:11px;letter-spacing:1.5px;line-height:2.1;color:var(--muted);max-width:400px;margin-bottom:48px;}
+.hero-actions{display:flex;gap:20px;align-items:center;flex-wrap:wrap;}
+.btn-gold{background:var(--gold);color:var(--black);padding:15px 36px;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:700;text-decoration:none;transition:all 0.3s;display:inline-block;border:none;cursor:pointer;}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px);}
+.btn-outline{border:1px solid rgba(201,168,76,0.35);color:var(--muted);padding:14px 28px;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-family:'Montserrat',sans-serif;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:10px;cursor:pointer;background:none;}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn-outline::after{content:'→';transition:transform 0.3s;}
+.btn-outline:hover::after{transform:translateX(4px);}
+.scroll-ind{position:absolute;bottom:36px;right:56px;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.35;}
+.scroll-ind span{font-size:8px;letter-spacing:3px;text-transform:uppercase;writing-mode:vertical-rl;color:var(--muted);}
+.scroll-line{width:1px;height:52px;background:linear-gradient(to bottom,var(--gold),transparent);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:0.35;}50%{opacity:1;}}
+
+/* STATS BAR */
+.stats-bar{background:var(--dark2);border-top:1px solid var(--gold-dim);border-bottom:1px solid var(--gold-dim);display:grid;grid-template-columns:repeat(4,1fr);}
+.stat-item{padding:36px 24px;text-align:center;border-right:1px solid var(--gold-dim);transition:background 0.3s;cursor:default;}
+.stat-item:last-child{border-right:none;}
+.stat-item:hover{background:rgba(201,168,76,0.03);}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;color:var(--gold);display:block;line-height:1;margin-bottom:10px;}
+.stat-lbl{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+
+/* DESTAQUES */
+.section{padding:100px 56px;}
+.section-head{margin-bottom:60px;}
+.section-head.center{text-align:center;}
+.sec-tag{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.sec-tag.center{justify-content:center;}
+.sec-tag::before{content:'';width:28px;height:1px;background:var(--gold);}
+.sec-tag.center::before{display:none;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,3.5vw,50px);font-weight:300;color:var(--white);line-height:1.15;}
+.sec-title em{font-style:italic;color:var(--gold);}
+
+.destaques-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.destaque-card{background:var(--dark2);border:1px solid rgba(201,168,76,0.07);position:relative;overflow:hidden;cursor:pointer;transition:all 0.4s;aspect-ratio:4/3;}
+.destaque-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-4px);}
+.destaque-card img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+.destaque-card:hover img{transform:scale(1.06);}
+.destaque-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,0.92) 0%,rgba(8,8,8,0.1) 60%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:24px;}
+.destaque-badge{position:absolute;top:16px;right:16px;background:var(--gold);color:var(--black);font-size:7px;letter-spacing:2px;text-transform:uppercase;font-weight:700;padding:4px 10px;}
+.destaque-badge.sold{background:var(--red);color:white;}
+.destaque-tag{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.destaque-name{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--white);margin-bottom:4px;}
+.destaque-price{font-size:10px;color:var(--muted);letter-spacing:1px;}
+.destaque-views{position:absolute;top:16px;left:16px;background:rgba(8,8,8,0.7);border:1px solid var(--gold-dim);padding:4px 10px;font-size:8px;color:var(--muted);letter-spacing:1px;}
+
+/* POR QUE LTM */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px;}
+.why-card{background:var(--dark2);border:1px solid rgba(201,168,76,0.07);padding:48px 36px;position:relative;overflow:hidden;transition:all 0.4s;}
+.why-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform 0.4s;transform-origin:left;}
+.why-card:hover::before{transform:scaleX(1);}
+.why-card:hover{background:rgba(201,168,76,0.025);}
+.why-num{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;color:rgba(201,168,76,0.07);position:absolute;top:16px;right:24px;line-height:1;}
+.why-icon{font-size:28px;margin-bottom:24px;}
+.why-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--white);margin-bottom:12px;}
+.why-text{font-size:11px;line-height:2;color:var(--muted);}
+
+/* SOLICITAR */
+.solicitar-block{background:var(--dark2);border:1px solid var(--gold-dim);padding:64px;position:relative;overflow:hidden;margin-top:80px;}
+.solicitar-block::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.solicitar-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.solicitar-form{display:flex;flex-direction:column;gap:12px;}
+.fi{background:var(--dark);border:1px solid rgba(201,168,76,0.12);padding:12px 16px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:11px;outline:none;transition:border 0.3s;width:100%;}
+.fi:focus{border-color:rgba(201,168,76,0.5);}
+.fi::placeholder{color:var(--muted);}
+.fi-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block;}
+
+/* ══════════════════════════════════
+   ESTOQUE
+══════════════════════════════════ */
+#page-estoque{padding-top:90px;}
+.estoque-header{padding:50px 56px 32px;border-bottom:1px solid var(--gold-dim);}
+.search-bar{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap;}
+.search-input{flex:1;min-width:200px;background:var(--dark2);border:1px solid var(--gold-dim);padding:12px 20px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:11px;outline:none;transition:border 0.3s;}
+.search-input:focus{border-color:rgba(201,168,76,0.5);}
+.search-input::placeholder{color:var(--muted);}
+.search-select{background:var(--dark2);border:1px solid var(--gold-dim);padding:12px 16px;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:10px;outline:none;cursor:pointer;min-width:160px;}
+.search-btn{background:var(--gold);color:var(--black);border:none;padding:12px 28px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;transition:all 0.3s;}
+.search-btn:hover{background:var(--gold-light);}
+.estoque-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:40px 56px;}
+.car-card{background:#fff;border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.35s;position:relative;box-shadow:0 2px 16px rgba(0,0,0,0.18);}
+.car-card:hover{transform:translateY(-6px);box-shadow:0 8px 32px rgba(0,0,0,0.28);}
+.car-card-img-wrap{overflow:hidden;aspect-ratio:4/3;background:#f0ede8;}
+.car-card-img{width:100%;height:100%;object-fit:cover;transition:transform 0.5s;display:block;}
+.car-card:hover .car-card-img{transform:scale(1.06);}
+.car-card-img-placeholder{width:100%;aspect-ratio:4/3;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:40px;color:rgba(201,168,76,0.15);}
+.car-card-body{padding:18px 20px 20px;}
+.car-card-brand{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.car-card-name{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;color:#111;margin-bottom:2px;line-height:1.3;text-transform:uppercase;letter-spacing:0.5px;}
+.car-card-sub{font-size:10px;color:#888;margin-bottom:12px;}
+.car-card-price{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:600;color:#111;margin-bottom:14px;}
+.car-card-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.car-card-tag{font-size:8px;letter-spacing:1px;background:#f5f2ed;border:1px solid #e0d9cc;padding:3px 9px;color:#666;border-radius:20px;}
+.car-card-btn{display:block;width:100%;background:var(--gold);border:none;color:#000;padding:11px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;transition:all 0.3s;text-align:center;text-decoration:none;border-radius:4px;}
+.car-card-btn:hover{background:var(--gold-light);}
+.sold-overlay{position:absolute;inset:0;background:rgba(8,8,8,0.6);display:flex;align-items:center;justify-content:center;border-radius:12px;}
+.sold-badge{background:var(--red);color:white;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:10px 24px;font-weight:700;}
+.views-badge{position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.65);border:1px solid rgba(201,168,76,0.4);padding:4px 10px;font-size:8px;color:#C9A84C;letter-spacing:1px;border-radius:20px;}
+.card-tipo-badge{position:absolute;top:12px;right:12px;background:var(--gold);color:#000;font-size:7px;letter-spacing:2px;text-transform:uppercase;font-weight:700;padding:4px 10px;border-radius:20px;}
+.no-results{padding:80px 56px;text-align:center;color:var(--muted);font-size:13px;}
+
+/* MODAL CARRO */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:800;overflow-y:auto;padding:40px 20px;}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;}
+.modal-box{background:var(--dark);border:1px solid var(--gold-dim);max-width:1000px;width:100%;position:relative;margin:auto;}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--gold-dim);color:var(--gold);width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all 0.3s;}
+.modal-close:hover{background:var(--gold);color:var(--black);}
+.modal-layout{display:grid;grid-template-columns:1fr 360px;}
+.modal-gallery{position:relative;}
+.modal-main-img{width:100%;aspect-ratio:16/10;object-fit:cover;cursor:zoom-in;}
+.modal-thumbs{display:flex;gap:4px;padding:8px;background:var(--dark2);overflow-x:auto;scrollbar-width:thin;}
+.modal-thumb{width:64px;height:48px;object-fit:cover;border:1px solid transparent;cursor:pointer;flex-shrink:0;transition:border 0.2s;}
+.modal-thumb.active{border-color:var(--gold);}
+.modal-arrows{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 10px;pointer-events:none;}
+.marrow{width:32px;height:32px;background:rgba(0,0,0,0.65);border:1px solid var(--gold-dim);color:var(--gold);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:all;transition:all 0.3s;}
+.marrow:hover{background:var(--gold);color:var(--black);}
+.modal-info{padding:28px;overflow-y:auto;max-height:600px;}
+.modal-brand{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;}
+.modal-name{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--white);line-height:1.1;margin-bottom:4px;}
+.modal-sub{font-size:11px;color:var(--muted);margin-bottom:20px;}
+.modal-price{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);padding:16px 0;border-top:1px solid var(--gold-dim);border-bottom:1px solid var(--gold-dim);margin-bottom:20px;}
+.modal-price small{display:block;font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:4px;}
+.modal-specs{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:18px;}
+.mspec{background:var(--dark2);padding:10px 14px;border:1px solid rgba(201,168,76,0.06);}
+.mspec-l{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.mspec-v{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--white);}
+.modal-ups{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.modal-ups::after{content:'';flex:1;height:1px;background:var(--gold-dim);}
+.modal-ulist{list-style:none;margin-bottom:16px;}
+.modal-ulist li{padding:7px 0;border-bottom:1px solid rgba(201,168,76,0.05);font-size:10px;color:var(--text);display:flex;gap:8px;line-height:1.6;}
+.modal-ulist li::before{content:'';width:3px;height:3px;background:var(--gold);border-radius:50%;flex-shrink:0;margin-top:5px;}
+.modal-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;}
+.modal-badge{padding:3px 10px;border:1px solid var(--gold-dim);font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+.modal-cta{display:flex;flex-direction:column;gap:8px;}
+
+/* ══════════════════════════════════
+   SOBRE
+══════════════════════════════════ */
+#page-sobre{padding-top:90px;}
+.sobre-hero{padding:80px 56px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-bottom:1px solid var(--gold-dim);}
+.sobre-visual{position:relative;height:480px;}
+.sobre-box{position:absolute;inset:0;background:var(--dark2);border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.sobre-box-text{font-family:'Cormorant Garamond',serif;font-size:110px;font-weight:300;color:rgba(201,168,76,0.05);letter-spacing:-4px;user-select:none;}
+.sobre-corner{position:absolute;top:-1px;right:-1px;width:36px;height:36px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);}
+.sobre-corner-bl{position:absolute;bottom:-1px;left:-1px;width:36px;height:36px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold);}
+.sobre-text p{font-size:12px;line-height:2.3;color:var(--muted);margin-bottom:16px;}
+.sobre-sig{font-family:'Cormorant Garamond',serif;font-size:28px;font-style:italic;color:var(--gold);margin-top:36px;padding-top:24px;border-top:1px solid var(--gold-dim);}
+.sobre-sig small{display:block;font-family:'Montserrat',sans-serif;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:6px;font-style:normal;}
+.timeline{padding:80px 56px;}
+.timeline-items{display:flex;flex-direction:column;gap:0;margin-top:48px;position:relative;}
+.timeline-items::before{content:'';position:absolute;left:20px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--gold),rgba(201,168,76,0.1));}
+.titem{padding:0 0 48px 60px;position:relative;}
+.titem::before{content:'';position:absolute;left:12px;top:4px;width:16px;height:16px;border:1px solid var(--gold);border-radius:50%;background:var(--black);}
+.titem-year{font-size:9px;letter-spacing:3px;color:var(--gold);margin-bottom:8px;}
+.titem-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--white);margin-bottom:8px;}
+.titem-text{font-size:11px;line-height:2;color:var(--muted);}
+
+/* ══════════════════════════════════
+   BUSCA
+══════════════════════════════════ */
+#page-busca{padding-top:90px;}
+.busca-wrap{padding:60px 56px;}
+.busca-form{background:var(--dark2);border:1px solid var(--gold-dim);padding:48px;margin-bottom:40px;}
+.busca-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.busca-result-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:24px;}
+.busca-result-label span{color:var(--gold);}
+
+/* ══════════════════════════════════
+   LOGIN
+══════════════════════════════════ */
+#page-login{padding-top:90px;display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.login-box{background:var(--dark2);border:1px solid var(--gold-dim);padding:60px;max-width:420px;width:100%;position:relative;}
+.login-box::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.login-corner{position:absolute;top:-1px;right:-1px;width:30px;height:30px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--white);margin-bottom:6px;}
+.login-sub{font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:36px;}
+.login-form{display:flex;flex-direction:column;gap:16px;}
+.login-error{background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.3);color:#ef9a9a;padding:12px 16px;font-size:10px;display:none;}
+.login-error.show{display:block;}
+
+/* ══════════════════════════════════
+   PAINEL ADMIN
+══════════════════════════════════ */
+#page-admin{padding-top:90px;}
+.admin-wrap{padding:50px 56px;max-width:960px;}
+.admin-tabs{display:flex;gap:2px;margin-bottom:32px;border-bottom:1px solid var(--gold-dim);}
+.atab{padding:14px 24px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;font-family:'Montserrat',sans-serif;transition:all 0.3s;margin-bottom:-1px;}
+.atab:hover{color:var(--text);}
+.atab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.apanel{display:none;}
+.apanel.active{display:block;}
+.asec{background:var(--dark2);border:1px solid var(--gold-dim);padding:32px;margin-bottom:18px;}
+.asec-title{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--white);margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid rgba(201,168,76,0.08);}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.fl{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+.profit-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.profit-box{background:var(--dark3);border:1px solid rgba(201,168,76,0.12);padding:16px;text-align:center;}
+.profit-box-label{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.profit-box-value{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);}
+.profit-box-value.loss{color:var(--red);}
+.upload-zone{border:2px dashed rgba(201,168,76,0.18);padding:40px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;margin-bottom:14px;}
+.upload-zone:hover,.upload-zone.over{border-color:rgba(201,168,76,0.5);background:rgba(201,168,76,0.02);}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.uicon{font-size:28px;margin-bottom:8px;opacity:0.3;}
+.utxt{font-size:11px;color:var(--muted);line-height:1.8;}
+.utxt strong{color:var(--gold);font-weight:500;}
+.pcount{font-size:9px;color:var(--muted);margin-bottom:12px;}
+.pcount span{color:var(--gold);}
+.ppgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;}
+.ppitem{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid var(--gold-dim);background:var(--dark);}
+.ppitem img{width:100%;height:100%;object-fit:cover;}
+.pprm{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(229,57,53,0.85);color:white;border:none;border-radius:50%;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.ppnum{position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,0.7);color:var(--gold);font-size:7px;padding:2px 5px;}
+.ugl{margin-bottom:10px;}
+.ui{display:flex;gap:7px;margin-bottom:7px;align-items:center;}
+.ui .fi{flex:1;}
+.urm{width:32px;height:32px;background:none;border:1px solid rgba(229,57,53,0.3);color:var(--red);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;}
+.urm:hover{background:var(--red);color:white;}
+.addu{background:none;border:1px dashed rgba(201,168,76,0.2);color:var(--gold);padding:9px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.3s;width:100%;}
+.addu:hover{border-color:var(--gold);}
+.savebtn{background:var(--gold);color:var(--black);border:none;padding:15px 40px;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:700;cursor:pointer;transition:all 0.3s;width:100%;margin-top:6px;}
+.savebtn:hover{background:var(--gold-light);}
+.alert{padding:13px 16px;font-size:10px;letter-spacing:1px;margin-bottom:14px;display:none;}
+.alert.success{background:rgba(67,160,71,0.1);border:1px solid rgba(67,160,71,0.3);color:#a5d6a7;}
+.alert.error{background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.3);color:#ef9a9a;}
+.alert.show{display:block;}
+.mlist{display:flex;flex-direction:column;gap:8px;}
+.mitem{background:var(--dark);border:1px solid rgba(201,168,76,0.08);padding:16px 20px;display:flex;align-items:center;gap:16px;transition:border 0.3s;}
+.mitem:hover{border-color:rgba(201,168,76,0.25);}
+.mthumb{width:56px;height:42px;object-fit:cover;border:1px solid var(--gold-dim);flex-shrink:0;}
+.minfo{flex:1;}
+.mname{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--white);margin-bottom:2px;}
+.mmeta{font-size:9px;color:var(--muted);}
+.mactions{display:flex;gap:6px;flex-wrap:wrap;}
+.mbtn{padding:6px 12px;font-size:8px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.3s;border:none;}
+.mbtn-del{background:none;border:1px solid rgba(229,57,53,0.3) !important;color:var(--red);}
+.mbtn-del:hover{background:var(--red);color:white;}
+.mbtn-sold{background:none;border:1px solid rgba(229,57,53,0.3) !important;color:var(--red);}
+.mbtn-sold.marked{border-color:rgba(67,160,71,0.3) !important;color:var(--green);}
+.mbtn-sold:hover{background:var(--red);color:white;}
+.mbtn-sold.marked:hover{background:var(--green);}
+.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:32px;}
+.astat{background:var(--dark2);border:1px solid var(--gold-dim);padding:24px;text-align:center;}
+.astat-n{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--gold);line-height:1;margin-bottom:8px;}
+.astat-l{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.logout-btn{background:none;border:1px solid rgba(229,57,53,0.3);color:var(--red);padding:8px 16px;font-size:8px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all 0.3s;}
+.logout-btn:hover{background:var(--red);color:white;}
+
+/* ── LIGHTBOX ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:9999;align-items:center;justify-content:center;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;}
+.lbclose{position:absolute;top:18px;right:18px;background:none;border:1px solid var(--gold-dim);color:var(--gold);width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* ── WA FLOAT ── */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:600;width:54px;height:54px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:all 0.3s;animation:waPulse 2.5s infinite;}
+@keyframes waPulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.4);}50%{box-shadow:0 4px 28px rgba(37,211,102,0.7);}}
+.wa-float:hover{transform:scale(1.1);}
+.wa-float svg{width:28px;height:28px;fill:white;}
+
+/* ── IG LINK ── */
+.ig-banner{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);padding:20px 56px;display:flex;justify-content:space-between;align-items:center;}
+.ig-text{font-size:12px;color:white;letter-spacing:1px;}
+.ig-btn{background:white;color:#833ab4;padding:8px 20px;font-size:9px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:700;text-decoration:none;transition:all 0.3s;}
+.ig-btn:hover{background:rgba(255,255,255,0.85);}
+
+/* ── FOOTER ── */
+footer{background:var(--dark2);border-top:1px solid var(--gold-dim);padding:50px 56px;}
+.footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.footer-brand .logo-text{font-size:20px;}
+.footer-desc{font-size:11px;line-height:2;color:var(--muted);margin-top:12px;}
+.footer-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.footer-links a{font-size:11px;color:var(--muted);text-decoration:none;transition:color 0.3s;cursor:pointer;}
+.footer-links a:hover{color:var(--gold);}
+.footer-contact p{font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.footer-bottom{border-top:1px solid var(--gold-dim);padding-top:24px;display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-size:9px;letter-spacing:2px;color:var(--muted);}
+
+/* ── DIVIDER ── */
+.gold-divider{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.4),transparent);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:14px 20px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero{padding:0 20px 70px;}
+  .hero-vline,.hero-car-shape{display:none;}
+  .stats-bar{grid-template-columns:1fr 1fr;}
+  .section{padding:60px 20px;}
+  .destaques-grid,.why-grid,.footer-grid{grid-template-columns:1fr;}
+  .sobre-hero{grid-template-columns:1fr;padding:50px 20px;}
+  .sobre-visual{display:none;}
+  .timeline{padding:50px 20px;}
+  .estoque-grid{grid-template-columns:1fr 1fr;padding:30px 20px;}
+  .busca-wrap{padding:40px 20px;}
+  .busca-grid{grid-template-columns:1fr;}
+  .admin-wrap{padding:36px 20px;}
+  .frow,.frow3,.profit-row{grid-template-columns:1fr;}
+  .modal-layout{grid-template-columns:1fr;}
+  .solicitar-grid{grid-template-columns:1fr;}
+  .ig-banner{padding:16px 20px;flex-direction:column;gap:12px;text-align:center;}
+  footer{padding:40px 20px;}
+  .footer-bottom{flex-direction:column;gap:10px;text-align:center;}
+}
+@media(max-width:600px){
+  .estoque-grid{grid-template-columns:1fr;}
+  .admin-stats{grid-template-columns:1fr 1fr;}
+  .ppgrid{grid-template-columns:repeat(3,1fr);}
+}
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-
 <!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">LTM<span>.</span></a>
-  <ul class="nav-links">
-    <li><a href="#sobre">Sobre</a></li>
-    <li><a href="#servicos">Serviços</a></li>
-    <li><a href="#veiculos">Veículos</a></li>
-    <li><a href="#processo">Como Funciona</a></li>
-    <li><a href="#contato" class="nav-cta">Contato</a></li>
-  </ul>
+<nav id="main-nav">
+  <a href="#" class="logo-svg" onclick="showPage('home');return false;">
+    <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="34" height="34" stroke="#C9A84C" stroke-width="1"/>
+      <rect x="5" y="5" width="26" height="26" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.4"/>
+      <text x="18" y="24" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" fill="#C9A84C" font-weight="300" letter-spacing="2">LTM</text>
+    </svg>
+    <span class="logo-text">LTM Automotive<span>.</span></span>
+  </a>
+  <div class="nav-links" id="nav-links">
+    <a href="#" onclick="showPage('home');return false;" class="active" data-page="home">Início</a>
+    <a href="#" onclick="showPage('estoque');return false;" data-page="estoque">Estoque</a>
+    <a href="#" onclick="showPage('busca');return false;" data-page="busca">Buscar</a>
+    <a href="#" onclick="showPage('sobre');return false;" data-page="sobre">Sobre</a>
+    <a href="#" onclick="showPage('estoque');return false;" class="nav-cta">Ver Veículos</a>
+  </div>
+  <button class="nav-login" onclick="showPage('login')">🔐 Admin</button>
+  <button class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-line"></div>
-  <div class="car-silhouette"></div>
-  <div class="car-glow"></div>
+<!-- ══════════ INÍCIO ══════════ -->
+<div class="page active" id="page-home">
 
-  <div class="hero-content">
-    <div class="hero-tag">Intermediação Exclusiva</div>
-    <h1 class="hero-title">
-      Veículos que<br>
-      definem <em>status.</em>
-    </h1>
-    <p class="hero-subtitle">
-      Blindados de luxo e superesportivos selecionados com rigor. Intermediação discreta, segura e personalizada para quem exige o melhor.
-    </p>
-    <div class="hero-actions">
-      <a href="#contato" class="btn-primary">Fale com um especialista</a>
-      <a href="#veiculos" class="btn-ghost">Ver veículos</a>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-vline"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-car-shape"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Intermediação Exclusiva · Rio de Janeiro</div>
+      <h1 class="hero-title">Veículos que<br>definem <em>status.</em></h1>
+      <p class="hero-sub">Blindados de luxo e superesportivos selecionados com rigor. Intermediação discreta, segura e personalizada para quem exige o melhor.</p>
+      <div class="hero-actions">
+        <button class="btn-gold" onclick="showPage('estoque')">Ver Estoque</button>
+        <button class="btn-outline" onclick="showPage('busca')">Buscar meu carro</button>
+      </div>
+    </div>
+    <div class="scroll-ind"><div class="scroll-line"></div><span>Scroll</span></div>
+  </section>
+
+  <div class="stats-bar">
+    <div class="stat-item"><span class="stat-num" id="stat-total">0</span><span class="stat-lbl">Veículos no Estoque</span></div>
+    <div class="stat-item"><span class="stat-num" id="stat-sold">0</span><span class="stat-lbl">Negócios Fechados</span></div>
+    <div class="stat-item"><span class="stat-num">RJ</span><span class="stat-lbl">& Todo o Brasil</span></div>
+    <div class="stat-item"><span class="stat-num">100%</span><span class="stat-lbl">Procedência Garantida</span></div>
+  </div>
+
+  <!-- DESTAQUES -->
+  <section class="section">
+    <div class="section-head">
+      <div class="sec-tag">Em Destaque</div>
+      <h2 class="sec-title">Os mais <em>procurados.</em></h2>
+    </div>
+    <div class="destaques-grid" id="destaques-grid">
+      <div style="grid-column:1/-1;padding:60px;text-align:center;color:var(--muted);font-size:12px;">Nenhum veículo cadastrado ainda.</div>
+    </div>
+    <div style="text-align:center;margin-top:32px;">
+      <button class="btn-outline" onclick="showPage('estoque')">Ver estoque completo</button>
+    </div>
+  </section>
+
+  <div class="gold-divider"></div>
+
+  <!-- POR QUE LTM -->
+  <section class="section">
+    <div class="section-head center">
+      <div class="sec-tag center">Por que a LTM?</div>
+      <h2 class="sec-title">Intermediação feita com <em>excelência.</em></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-num">01</div><div class="why-icon">🛡</div><h3 class="why-title">Segurança Jurídica</h3><p class="why-text">Cada negociação é conduzida com contrato formal, análise documental completa e acompanhamento até a transferência. Você não precisa se preocupar com nada.</p></div>
+      <div class="why-card"><div class="why-num">02</div><div class="why-icon">🤝</div><h3 class="why-title">Rede Exclusiva</h3><p class="why-text">Acesso a uma rede de lojistas qualificados no Rio de Janeiro e nas principais metrópoles do Brasil. Veículos raros que não chegam ao mercado aberto.</p></div>
+      <div class="why-card"><div class="why-num">03</div><div class="why-icon">🔒</div><h3 class="why-title">Total Discrição</h3><p class="why-text">Sua privacidade é absoluta. Negociações conduzidas com confidencialidade total — do primeiro contato à entrega das chaves.</p></div>
+      <div class="why-card"><div class="why-num">04</div><div class="why-icon">✅</div><h3 class="why-title">Procedência Verificada</h3><p class="why-text">Histórico, revisões, documentação e origem de cada veículo verificados antes de qualquer negociação. Zero surpresas.</p></div>
+      <div class="why-card"><div class="why-num">05</div><div class="why-icon">🚚</div><h3 class="why-title">Entrega Nacional</h3><p class="why-text">Logística completa para qualquer estado do Brasil. Você recebe o veículo onde estiver, com total segurança no transporte.</p></div>
+      <div class="why-card"><div class="why-num">06</div><div class="why-icon">💎</div><h3 class="why-title">Alto Padrão</h3><p class="why-text">Especialistas em blindados de luxo e superesportivos de alto valor. Conhecimento técnico e de mercado para garantir o melhor negócio.</p></div>
+    </div>
+  </section>
+
+  <!-- SOLICITAR -->
+  <section class="section" style="padding-top:0;">
+    <div class="solicitar-block">
+      <div class="solicitar-grid">
+        <div>
+          <div class="sec-tag">Não encontrou?</div>
+          <h2 class="sec-title" style="font-size:clamp(26px,3vw,42px);">Descreva o carro<br>dos seus <em>sonhos.</em></h2>
+          <p style="font-size:11px;line-height:2.2;color:var(--muted);margin-top:16px;">Nossa rede de parceiros é extensa. Se o veículo que você procura não está no estoque, nos conte o que você quer e buscamos para você.</p>
+        </div>
+        <div class="solicitar-form">
+          <div class="fg"><label class="fi-label">Seu nome</label><input class="fi" id="sol-nome" type="text" placeholder="Como prefere ser chamado?"></div>
+          <div class="fg"><label class="fi-label">WhatsApp</label><input class="fi" id="sol-tel" type="text" placeholder="(21) 99999-9999"></div>
+          <div class="fg"><label class="fi-label">Veículo que procura</label><input class="fi" id="sol-carro" type="text" placeholder="Ex: Ferrari 296 GTB, Porsche 911 GT3..."></div>
+          <div class="fg"><label class="fi-label">Orçamento aproximado</label><input class="fi" id="sol-budget" type="text" placeholder="Ex: Até R$ 2.000.000"></div>
+          <button class="btn-gold" style="width:100%;border:none;cursor:pointer;" onclick="enviarSolicitacao()">Enviar pelo WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IG BANNER -->
+  <div class="ig-banner">
+    <div class="ig-text">📸 Acompanhe os lançamentos e bastidores no Instagram</div>
+    <a href="https://instagram.com/telles.ltm" target="_blank" class="ig-btn">@telles.ltm →</a>
+  </div>
+
+</div>
+
+<!-- ══════════ ESTOQUE ══════════ -->
+<div class="page" id="page-estoque">
+  <div class="estoque-header">
+    <span class="sec-tag" style="display:flex;align-items:center;">Estoque Completo</span>
+    <h1 class="sec-title" style="margin-top:8px;">Veículos <em>disponíveis.</em></h1>
+    <div class="search-bar">
+      <input class="search-input" id="search-q" type="text" placeholder="Buscar por marca ou modelo..." oninput="filterEstoque()">
+      <select class="search-select" id="search-tipo" onchange="filterEstoque()">
+        <option value="">Todos os tipos</option>
+        <option value="superesportivo">Superesportivos</option>
+        <option value="blindado">Blindados</option>
+      </select>
+      <button class="search-btn" onclick="filterEstoque()">Buscar</button>
     </div>
   </div>
-
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-</section>
-
-<!-- STATS -->
-<div class="stats">
-  <div class="stat reveal">
-    <span class="stat-number">100%</span>
-    <span class="stat-label">Negócios Concluídos</span>
-  </div>
-  <div class="stat reveal">
-    <span class="stat-number">RJ</span>
-    <span class="stat-label">& Grandes Metrópoles</span>
-  </div>
-  <div class="stat reveal">
-    <span class="stat-number">+10</span>
-    <span class="stat-label">Anos de Mercado</span>
-  </div>
-  <div class="stat reveal">
-    <span class="stat-number">III</span>
-    <span class="stat-label">Nível Máximo de Blindagem</span>
+  <div class="estoque-grid" id="estoque-grid">
+    <div class="no-results" style="grid-column:1/-1;">Nenhum veículo cadastrado ainda.</div>
   </div>
 </div>
 
-<!-- ABOUT -->
-<section class="about" id="sobre">
-  <div>
-    <div class="about-tag">Quem somos</div>
-    <h2 class="about-title">
-      Experiência e <em>discrição</em><br>em cada negociação.
-    </h2>
-    <p class="about-text">
-      A LTM nasceu da percepção de que o mercado de veículos de alto padrão exige mais do que uma simples transação. Exige confiança, conhecimento profundo e uma rede de relacionamentos consolidada.
-    </p>
-    <p class="about-text">
-      Intermediamos blindados de luxo e superesportivos com segurança jurídica e total transparência — para que você faça o melhor negócio sem abrir mão da sua privacidade.
-    </p>
-    <p class="about-text">
-      Atuamos no Rio de Janeiro e nas principais metrópoles do Brasil, conectando compradores e vendedores com critério e excelência.
-    </p>
-    <div class="about-signature">
-      Telles
-      <small>Fundador & Especialista em Veículos de Alto Padrão</small>
+<!-- ══════════ BUSCA ══════════ -->
+<div class="page" id="page-busca">
+  <div class="busca-wrap">
+    <span class="sec-tag" style="display:flex;align-items:center;">Busca Avançada</span>
+    <h1 class="sec-title" style="margin-top:8px;margin-bottom:36px;">Encontre seu <em>veículo.</em></h1>
+    <div class="busca-form">
+      <div class="busca-grid">
+        <div class="fg"><label class="fl">Marca</label><input class="fi" id="b-marca" type="text" placeholder="Ex: Ferrari, Porsche, BMW..." oninput="doBusca()"></div>
+        <div class="fg"><label class="fl">Modelo</label><input class="fi" id="b-modelo" type="text" placeholder="Ex: F8, 911 GT3, M3..." oninput="doBusca()"></div>
+      </div>
+      <button class="btn-gold" style="border:none;cursor:pointer;" onclick="doBusca()">Buscar</button>
     </div>
+    <div class="busca-result-label" id="busca-label"></div>
+    <div class="estoque-grid" id="busca-grid" style="padding:0;"></div>
   </div>
+</div>
 
-  <div class="about-visual">
-    <div class="about-box">
-      <div class="about-box-inner">LTM</div>
-      <div class="about-corner"></div>
-      <div class="about-corner-bl"></div>
-    </div>
-  </div>
-</section>
-
-<div class="gold-divider"></div>
-
-<!-- SERVICES -->
-<section class="services" id="servicos">
-  <div class="section-header">
-    <span class="section-tag">O que fazemos</span>
-    <h2 class="section-title">Intermediação feita com <em>precisão.</em></h2>
-  </div>
-
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <span class="service-number">01</span>
-      <div class="service-icon">🛡</div>
-      <h3 class="service-title">Blindados de Luxo</h3>
-      <p class="service-text">Sedans, SUVs e utilitários blindados dos maiores fabricantes mundiais. Certificação e documentação verificadas em cada negociação.</p>
-    </div>
-    <div class="service-card reveal">
-      <span class="service-number">02</span>
-      <div class="service-icon">🏎</div>
-      <h3 class="service-title">Superesportivos</h3>
-      <p class="service-text">Ferrari, Lamborghini, Porsche e mais. Acesso a veículos raros com histórico completo, revisões e procedência garantida.</p>
-    </div>
-    <div class="service-card reveal">
-      <span class="service-number">03</span>
-      <div class="service-icon">🤝</div>
-      <h3 class="service-title">Intermediação Segura</h3>
-      <p class="service-text">Negociação estruturada com contrato, análise documental e acompanhamento até a transferência. Você não precisa se preocupar com nada.</p>
-    </div>
-  </div>
-</section>
-
-<!-- VEHICLES -->
-<section class="vehicles" id="veiculos">
-  <div class="vehicles-intro">
+<!-- ══════════ SOBRE ══════════ -->
+<div class="page" id="page-sobre">
+  <div class="sobre-hero">
     <div>
-      <span class="section-tag">Portfólio</span>
-      <h2 class="section-title">Veículos <em>disponíveis.</em></h2>
-    </div>
-    <a href="#contato" class="btn-ghost">Ver todos os veículos</a>
-  </div>
-
-  <div class="vehicles-grid">
-    <div class="vehicle-card">
-      <div class="vehicle-card-bg"></div>
-      <div class="vehicle-placeholder">🚗</div>
-      <div class="vehicle-add-photo">
-        <span>Adicionar foto do veículo</span>
+      <div class="sec-tag">Nossa História</div>
+      <h1 class="sec-title" style="margin-bottom:28px;">A paixão que<br>virou <em>negócio.</em></h1>
+      <div class="sobre-text">
+        <p>Sempre fui apaixonado por carros. Não apenas por velocidade ou status — mas pela engenharia, pela história e pela arte que cada veículo de alto padrão representa. Essa paixão me levou a um mundo onde poucas pessoas têm acesso.</p>
+        <p>Com anos de relacionamento no mercado de veículos premium do Rio de Janeiro, construí uma rede sólida de lojistas, colecionadores e entusiastas que confiam no meu trabalho. Cada negócio fechado é uma história de confiança.</p>
+        <p>A LTM nasceu para democratizar o acesso a veículos de alto padrão com segurança, discrição e expertise. Não vendemos carros — intermediamos sonhos, com a responsabilidade de quem conhece profundamente esse mercado.</p>
       </div>
-      <div class="vehicle-info">
-        <div class="vehicle-tag">Blindado Nível III-A</div>
-        <div class="vehicle-name">Veículo em Destaque</div>
-        <div class="vehicle-price">Consulte o valor</div>
-      </div>
+      <div class="sobre-sig">Lucas Telles<small>Fundador · Especialista em Veículos de Alto Padrão</small></div>
     </div>
-    <div class="vehicle-card">
-      <div class="vehicle-card-bg"></div>
-      <div class="vehicle-add-photo">
-        <span>Adicionar foto</span>
-      </div>
-      <div class="vehicle-info">
-        <div class="vehicle-tag">Superesportivo</div>
-        <div class="vehicle-name">Disponível</div>
-        <div class="vehicle-price">Consulte</div>
-      </div>
-    </div>
-    <div class="vehicle-card">
-      <div class="vehicle-card-bg"></div>
-      <div class="vehicle-add-photo">
-        <span>Adicionar foto</span>
-      </div>
-      <div class="vehicle-info">
-        <div class="vehicle-tag">Blindado</div>
-        <div class="vehicle-name">Disponível</div>
-        <div class="vehicle-price">Consulte</div>
-      </div>
-    </div>
-    <div class="vehicle-card">
-      <div class="vehicle-card-bg"></div>
-      <div class="vehicle-add-photo">
-        <span>Adicionar foto</span>
-      </div>
-      <div class="vehicle-info">
-        <div class="vehicle-tag">Alto Padrão</div>
-        <div class="vehicle-name">Disponível</div>
-        <div class="vehicle-price">Consulte</div>
-      </div>
-    </div>
-    <div class="vehicle-card">
-      <div class="vehicle-card-bg"></div>
-      <div class="vehicle-add-photo">
-        <span>Adicionar foto</span>
-      </div>
-      <div class="vehicle-info">
-        <div class="vehicle-tag">Superesportivo</div>
-        <div class="vehicle-name">Disponível</div>
-        <div class="vehicle-price">Consulte</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="gold-divider"></div>
-
-<!-- PROCESS -->
-<section class="process" id="processo">
-  <div class="section-header">
-    <span class="section-tag">Como funciona</span>
-    <h2 class="section-title">Do contato ao <em>volante.</em></h2>
-  </div>
-
-  <div class="process-steps">
-    <div class="step reveal">
-      <div class="step-num">I</div>
-      <h3 class="step-title">Primeiro Contato</h3>
-      <p class="step-text">Você nos conta o que procura. Blindado, esportivo, marca, orçamento, prazo. Sem formulários complicados.</p>
-    </div>
-    <div class="step reveal">
-      <div class="step-num">II</div>
-      <h3 class="step-title">Curadoria</h3>
-      <p class="step-text">Buscamos na nossa rede de lojistas e parceiros o veículo ideal para você, verificando procedência e histórico.</p>
-    </div>
-    <div class="step reveal">
-      <div class="step-num">III</div>
-      <h3 class="step-title">Negociação</h3>
-      <p class="step-text">Conduzimos toda a negociação com contrato e segurança jurídica. Você decide, nós executamos.</p>
-    </div>
-    <div class="step reveal">
-      <div class="step-num">IV</div>
-      <h3 class="step-title">Entrega</h3>
-      <p class="step-text">Transferência e documentação acompanhadas até o final. Você recebe as chaves sem preocupação.</p>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="contact" id="contato">
-  <div>
-    <h2 class="contact-title">
-      Pronto para o seu<br>próximo <em>veículo?</em>
-    </h2>
-    <p class="contact-text">
-      Não espere encontrar o veículo certo por conta própria. Fale com um especialista e deixe que a nossa rede trabalhe por você.
-    </p>
-    <div class="contact-channels">
-      <a href="https://wa.me/5521979392718" class="contact-channel">
-        <div class="channel-icon">📱</div>
-        <div class="channel-info">
-          <div class="channel-name">WhatsApp</div>
-          <div class="channel-value">Fale agora</div>
-        </div>
-        <span class="channel-arrow">→</span>
-      </a>
-      <a href="https://instagram.com/telles.ltm" class="contact-channel" target="_blank">
-        <div class="channel-icon">📷</div>
-        <div class="channel-info">
-          <div class="channel-name">Instagram</div>
-          <div class="channel-value">@telles.ltm</div>
-        </div>
-        <span class="channel-arrow">→</span>
-      </a>
-      <a href="mailto:contato@ltmblindados.com.br" class="contact-channel">
-        <div class="channel-icon">✉</div>
-        <div class="channel-info">
-          <div class="channel-name">E-mail</div>
-          <div class="channel-value">contato@ltmblindados.com.br</div>
-        </div>
-        <span class="channel-arrow">→</span>
-      </a>
+    <div class="sobre-visual">
+      <div class="sobre-box"><div class="sobre-box-text">LTM</div><div class="sobre-corner"></div><div class="sobre-corner-bl"></div></div>
     </div>
   </div>
 
-  <div>
-    <div style="background: var(--dark2); border: 1px solid rgba(201,168,76,0.15); padding: 60px 48px; position: relative;">
-      <div style="position: absolute; top: -1px; right: -1px; width: 40px; height: 40px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold);"></div>
-      <div style="position: absolute; bottom: -1px; left: -1px; width: 40px; height: 40px; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold);"></div>
-      
-      <span class="section-tag" style="text-align: left; display: block; margin-bottom: 32px;">Mensagem direta</span>
-      
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted);">Seu nome</label>
-          <input type="text" placeholder="Como prefere ser chamado?" style="background: var(--dark); border: 1px solid rgba(201,168,76,0.15); padding: 14px 20px; color: var(--text); font-family: 'Montserrat', sans-serif; font-size: 12px; outline: none; transition: border 0.3s;" onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(201,168,76,0.15)'">
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted);">WhatsApp</label>
-          <input type="text" placeholder="(21) 99999-9999" style="background: var(--dark); border: 1px solid rgba(201,168,76,0.15); padding: 14px 20px; color: var(--text); font-family: 'Montserrat', sans-serif; font-size: 12px; outline: none; transition: border 0.3s;" onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(201,168,76,0.15)'">
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted);">O que procura?</label>
-          <select style="background: var(--dark); border: 1px solid rgba(201,168,76,0.15); padding: 14px 20px; color: var(--text-muted); font-family: 'Montserrat', sans-serif; font-size: 12px; outline: none; cursor: pointer;">
-            <option value="">Selecione o tipo de veículo</option>
-            <option>Blindado de Luxo</option>
-            <option>Superesportivo</option>
-            <option>Ambos</option>
-            <option>Quero vender meu veículo</option>
-          </select>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted);">Mensagem</label>
-          <textarea rows="4" placeholder="Conte mais sobre o que procura..." style="background: var(--dark); border: 1px solid rgba(201,168,76,0.15); padding: 14px 20px; color: var(--text); font-family: 'Montserrat', sans-serif; font-size: 12px; outline: none; resize: none; transition: border 0.3s;" onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(201,168,76,0.15)'"></textarea>
-        </div>
-        <button onclick="alert('Em breve este formulário estará ativo!')" class="btn-primary" style="margin-top: 8px; border: none; cursor: pointer; width: 100%; font-family: inherit;">Enviar mensagem</button>
-      </div>
+  <div class="timeline">
+    <div class="sec-tag" style="display:flex;align-items:center;">Trajetória</div>
+    <h2 class="sec-title" style="margin-top:8px;margin-bottom:0;">Como chegamos <em>aqui.</em></h2>
+    <div class="timeline-items">
+      <div class="titem"><div class="titem-year">O Início</div><h3 class="titem-title">A primeira negociação</h3><p class="titem-text">Tudo começou com uma paixão genuína por carros de alto padrão e a percepção de que o mercado precisava de alguém que unisse conhecimento técnico com confiança e discrição.</p></div>
+      <div class="titem"><div class="titem-year">A Rede</div><h3 class="titem-title">Construindo conexões</h3><p class="titem-text">Anos de relacionamento com lojistas no Rio de Janeiro e nas principais metrópoles do Brasil criaram uma rede exclusiva que abre portas para veículos que raramente chegam ao mercado aberto.</p></div>
+      <div class="titem"><div class="titem-year">A Especialidade</div><h3 class="titem-title">Blindados e Superesportivos</h3><p class="titem-text">A expertise foi se aprofundando em dois nichos específicos: blindados de luxo — onde segurança encontra sofisticação — e superesportivos, onde a engenharia chega ao seu limite.</p></div>
+      <div class="titem"><div class="titem-year">Hoje</div><h3 class="titem-title">LTM — Uma marca de confiança</h3><p class="titem-text">A LTM representa mais de uma sigla. É o compromisso com cada cliente, a seriedade em cada negociação e a satisfação de conectar pessoas a veículos que transformam experiências.</p></div>
     </div>
   </div>
-</section>
+
+  <div class="ig-banner">
+    <div class="ig-text">📸 Acompanhe os bastidores e novidades no Instagram</div>
+    <a href="https://instagram.com/telles.ltm" target="_blank" class="ig-btn">@telles.ltm →</a>
+  </div>
+</div>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div class="page" id="page-login">
+  <div class="login-box">
+    <div class="login-corner"></div>
+    <div style="margin-bottom:24px;">
+      <svg width="40" height="40" viewBox="0 0 36 36" fill="none"><rect x="1" y="1" width="34" height="34" stroke="#C9A84C" stroke-width="1"/><text x="18" y="24" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="14" fill="#C9A84C" font-weight="300" letter-spacing="2">LTM</text></svg>
+    </div>
+    <div class="login-title">Acesso Restrito</div>
+    <div class="login-sub">Painel administrativo · LTM Automotive</div>
+    <div id="login-error" class="login-error">Email ou senha incorretos.</div>
+    <div class="login-form">
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="login-email" type="email" placeholder="seu@email.com"></div>
+      <div class="fg"><label class="fl">Senha</label><input class="fi" id="login-pass" type="password" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn-gold" style="border:none;cursor:pointer;width:100%;" onclick="doLogin()">Entrar no Painel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ADMIN ══════════ -->
+<div class="page" id="page-admin">
+  <div class="admin-wrap">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <span class="sec-tag" style="display:flex;align-items:center;">Painel Administrativo</span>
+        <h2 class="sec-title" style="margin-top:4px;">Bem-vindo, <em>Lucas.</em></h2>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Sair</button>
+    </div>
+
+    <!-- STATS ADMIN -->
+    <div class="admin-stats" id="admin-stats"></div>
+
+    <div class="admin-tabs">
+      <button class="atab active" onclick="showATab('add')">+ Adicionar</button>
+      <button class="atab" onclick="showATab('manage')">Gerenciar</button>
+    </div>
+
+    <!-- ADD -->
+    <div class="apanel active" id="apanel-add">
+      <div id="form-alert" class="alert"></div>
+
+      <div class="asec">
+        <div class="asec-title">📸 Fotos <span style="font-family:Montserrat;font-size:9px;color:var(--muted);font-weight:300;">— máx. 15</span></div>
+        <div class="pcount"><span id="photo-count">0</span> / 15 fotos</div>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" id="photo-input" accept="image/*" multiple onchange="handlePhotos(this.files)">
+          <div class="uicon">📁</div>
+          <div class="utxt"><strong>Clique ou arraste as fotos</strong><br>JPG, PNG, WEBP · Máx. 15 fotos</div>
+        </div>
+        <div class="ppgrid" id="photos-preview"></div>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">🚗 Informações</div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Marca *</label><input class="fi" id="f-brand" type="text" placeholder="Ferrari"></div>
+          <div class="fg"><label class="fl">Modelo *</label><input class="fi" id="f-model" type="text" placeholder="F8 Spider"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Subtítulo</label><input class="fi" id="f-subtitle" type="text" placeholder="3.9 V8 Biturbo · 720 cv"></div>
+          <div class="fg"><label class="fl">Tipo</label>
+            <select class="fi" id="f-tipo">
+              <option value="superesportivo">Superesportivo</option>
+              <option value="blindado">Blindado</option>
+              <option value="luxo">Luxo</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow3">
+          <div class="fg"><label class="fl">Ano</label><input class="fi" id="f-year" type="text" placeholder="2021"></div>
+          <div class="fg"><label class="fl">Quilometragem</label><input class="fi" id="f-km" type="text" placeholder="6.500 km"></div>
+          <div class="fg"><label class="fl">Cor</label><input class="fi" id="f-color" type="text" placeholder="Rosso Corsa"></div>
+        </div>
+        <div class="frow3">
+          <div class="fg"><label class="fl">Motor</label><input class="fi" id="f-engine" type="text" placeholder="3.9 V8 Biturbo"></div>
+          <div class="fg"><label class="fl">Potência</label><input class="fi" id="f-power" type="text" placeholder="720 cv"></div>
+          <div class="fg"><label class="fl">Câmbio</label><input class="fi" id="f-gear" type="text" placeholder="F1-DCT 7 marchas"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">0 — 100 km/h</label><input class="fi" id="f-accel" type="text" placeholder="2,9 segundos"></div>
+          <div class="fg"><label class="fl">Velocidade Máxima</label><input class="fi" id="f-vmax" type="text" placeholder="340 km/h"></div>
+        </div>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">💰 Valores <span style="font-family:Montserrat;font-size:9px;color:var(--muted);font-weight:300;">— visível só para você</span></div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Preço de Venda (público) *</label><input class="fi" id="f-price" type="text" placeholder="R$ 4.199.000" oninput="calcProfit()"></div>
+          <div class="fg"><label class="fl">Seu Custo / Preço do Lojista</label><input class="fi" id="f-cost" type="text" placeholder="R$ 3.900.000" oninput="calcProfit()"></div>
+        </div>
+        <div class="profit-row" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+          <div class="profit-box"><div class="profit-box-label">Lucro Bruto</div><div class="profit-box-value" id="profit-val">—</div></div>
+          <div class="profit-box"><div class="profit-box-label">Margem %</div><div class="profit-box-value" id="profit-pct">—</div></div>
+          <div class="profit-box"><div class="profit-box-label">Markup</div><div class="profit-box-value" id="profit-markup">—</div></div>
+          <div class="profit-box"><div class="profit-box-label">Status</div><div class="profit-box-value" id="profit-status">—</div></div>
+        </div>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">⚡ Upgrades & Diferenciais</div>
+        <div class="ugl" id="upgrades-list">
+          <div class="ui"><input class="fi" type="text" placeholder="Ex: Escape Akrapovic"><button class="urm" onclick="removeUpgrade(this)">×</button></div>
+        </div>
+        <button class="addu" onclick="addUpgrade()">+ Adicionar item</button>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">🏷 Selos</div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Selo 1</label><input class="fi" id="b1" type="text" placeholder="Importação Oficial"></div>
+          <div class="fg"><label class="fl">Selo 2</label><input class="fi" id="b2" type="text" placeholder="PPF Full"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Selo 3</label><input class="fi" id="b3" type="text" placeholder="Revisado Concessionária"></div>
+          <div class="fg"><label class="fl">Selo 4</label><input class="fi" id="b4" type="text" placeholder="Entrega Nacional"></div>
+        </div>
+      </div>
+
+      <div class="asec">
+        <div class="asec-title">⭐ Destaque na página inicial</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <input type="checkbox" id="f-destaque" style="width:18px;height:18px;accent-color:var(--gold);cursor:pointer;">
+          <label for="f-destaque" style="font-size:11px;color:var(--muted);cursor:pointer;">Exibir este veículo nos destaques da página inicial</label>
+        </div>
+      </div>
+
+      <button class="savebtn" onclick="saveCar()">Publicar no Estoque</button>
+    </div>
+
+    <!-- MANAGE -->
+    <div class="apanel" id="apanel-manage">
+      <div class="mlist" id="manage-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CARRO -->
+<div class="modal-overlay" id="car-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-layout">
+      <div class="modal-gallery">
+        <img class="modal-main-img" id="modal-main" src="" onclick="openLightbox(this.src)">
+        <div class="modal-arrows"><button class="marrow" onclick="modalPrev()">‹</button><button class="marrow" onclick="modalNext()">›</button></div>
+        <div class="modal-thumbs" id="modal-thumbs"></div>
+      </div>
+      <div class="modal-info" id="modal-info"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lbclose" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/5521979392718?text=Olá%20Lucas%2C%20vim%20pelo%20site%20da%20LTM%20e%20gostaria%20de%20saber%20mais%20sobre%20os%20veículos." class="wa-float" target="_blank" title="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">LTM<span>.</span></div>
-  <p class="footer-copy">© 2026 LTM Blindados. Rio de Janeiro, Brasil.</p>
-  <div class="footer-links">
-    <a href="#sobre">Sobre</a>
-    <a href="#veiculos">Veículos</a>
-    <a href="#contato">Contato</a>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-text">LTM Automotive<span>.</span></div>
+      <p class="footer-desc">Intermediação exclusiva de blindados de luxo e superesportivos. Rio de Janeiro e todo o Brasil.</p>
+    </div>
+    <div>
+      <div class="footer-title">Navegação</div>
+      <ul class="footer-links">
+        <li><a onclick="showPage('home')">Início</a></li>
+        <li><a onclick="showPage('estoque')">Estoque</a></li>
+        <li><a onclick="showPage('busca')">Buscar Veículo</a></li>
+        <li><a onclick="showPage('sobre')">Sobre a LTM</a></li>
+      </ul>
+    </div>
+    <div class="footer-contact">
+      <div class="footer-title">Contato</div>
+      <p>📱 (21) 97939-2718</p>
+      <p>📷 @telles.ltm</p>
+      <p>📍 Rio de Janeiro, Brasil</p>
+      <a href="https://instagram.com/telles.ltm" target="_blank" class="ig-btn" style="display:inline-block;margin-top:12px;font-size:8px;">Instagram →</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="logo-text" style="font-size:16px;">LTM Automotive<span>.</span></div>
+    <p class="footer-copy">© 2026 LTM Automotive · Todos os direitos reservados · Rio de Janeiro</p>
   </div>
 </footer>
 
 <script>
-  // Cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
+// ══════════════════════════════════
+// STATE
+// ══════════════════════════════════
+let cars = JSON.parse(localStorage.getItem('ltm_cars_v2') || '[]');
+let uploadedPhotos = [];
+let isLoggedIn = false;
+let modalCar = null;
+let modalIdx = 0;
 
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-  });
+// ══════════════════════════════════
+// NAV
+// ══════════════════════════════════
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 30);
+});
 
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) *.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
+function showPage(id) {
+  if (id === 'admin' && !isLoggedIn) { showPage('login'); return; }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a[data-page]').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const active = document.querySelector(`.nav-links a[data-page="${id}"]`);
+  if (active) active.classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'home') renderHome();
+  if (id === 'estoque') renderEstoque(cars);
+  if (id === 'admin') renderAdmin();
+  if (id === 'busca') { document.getElementById('busca-label').textContent = ''; document.getElementById('busca-grid').innerHTML = ''; }
+}
+
+function toggleMenu() {
+  const nl = document.getElementById('nav-links');
+  nl.style.display = nl.style.display === 'flex' ? 'none' : 'flex';
+  nl.style.flexDirection = 'column';
+  nl.style.position = 'absolute';
+  nl.style.top = '62px';
+  nl.style.left = '0'; nl.style.right = '0';
+  nl.style.background = 'rgba(8,8,8,0.98)';
+  nl.style.padding = '20px';
+  nl.style.gap = '16px';
+  nl.style.borderBottom = '1px solid var(--gold-dim)';
+}
+
+// ══════════════════════════════════
+// LOGIN
+// ══════════════════════════════════
+const AUTH = { email: 'telleslu30@gmail.com', pass: '221195' };
+
+function doLogin() {
+  const emailInput = document.getElementById('login-email');
+  const passInput = document.getElementById('login-pass');
+  const err = document.getElementById('login-error');
+  const e = emailInput.value.replace(/\s/g,'').toLowerCase();
+  const p = passInput.value.replace(/\s/g,'');
+  const okEmail = e === 'telleslu30@gmail.com';
+  const okPass = p === '221195';
+  if (okEmail && okPass) {
+    isLoggedIn = true;
+    err.classList.remove('show');
+    emailInput.value = '';
+    passInput.value = '';
+    showPage('admin');
+  } else {
+    err.textContent = 'Email ou senha incorretos. Email: telleslu30@gmail.com | Senha: 221195';
+    err.classList.add('show');
+    passInput.value = '';
+    passInput.focus();
   }
-  animateRing();
+}
 
-  document.querySelectorAll('a, button, input, select, textarea').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      ring.style.transform = 'translate(-50%, -50%) scale(1.8)';
-      ring.style.opacity = '0.3';
-    });
-    el.addEventListener('mouseleave', () => {
-      ring.style.transform = 'translate(-50%, -50%) scale(1)';
-      ring.style.opacity = '0.6';
-    });
+function doLogout() {
+  isLoggedIn = false;
+  showPage('home');
+}
+
+// ══════════════════════════════════
+// PHOTO UPLOAD
+// ══════════════════════════════════
+function handlePhotos(files) {
+  const rem = 15 - uploadedPhotos.length;
+  const toAdd = Math.min(files.length, rem);
+  if (!toAdd) { showAlert('Limite de 15 fotos atingido.', 'error'); return; }
+  let done = 0;
+  for (let i = 0; i < toAdd; i++) {
+    const r = new FileReader();
+    r.onload = e => { uploadedPhotos.push(e.target.result); done++; if (done === toAdd) renderPreviews(); };
+    r.readAsDataURL(files[i]);
+  }
+}
+
+function renderPreviews() {
+  document.getElementById('photo-count').textContent = uploadedPhotos.length;
+  document.getElementById('photos-preview').innerHTML = uploadedPhotos.map((s, i) =>
+    `<div class="ppitem"><img src="${s}"><button class="pprm" onclick="removePhoto(${i})">×</button><div class="ppnum">${i+1}</div></div>`
+  ).join('');
+}
+
+function removePhoto(i) { uploadedPhotos.splice(i, 1); renderPreviews(); }
+
+const uz = document.getElementById('upload-zone');
+uz.addEventListener('dragover', e => { e.preventDefault(); uz.classList.add('over'); });
+uz.addEventListener('dragleave', () => uz.classList.remove('over'));
+uz.addEventListener('drop', e => { e.preventDefault(); uz.classList.remove('over'); handlePhotos(e.dataTransfer.files); });
+
+// ══════════════════════════════════
+// PROFIT CALC
+// ══════════════════════════════════
+function parseMoney(s) {
+  return parseFloat(s.replace(/[R$\s.]/g,'').replace(',','.')) || 0;
+}
+
+function calcProfit() {
+  const price = parseMoney(document.getElementById('f-price').value);
+  const cost = parseMoney(document.getElementById('f-cost').value);
+  const pv = document.getElementById('profit-val');
+  const pp = document.getElementById('profit-pct');
+  const pm = document.getElementById('profit-markup');
+  const ps = document.getElementById('profit-status');
+  if (!price || !cost) {
+    [pv,pp,pm,ps].forEach(e=>{ if(e) e.textContent='—'; e.className='profit-box-value'; });
+    return;
+  }
+  const profit = price - cost;
+  const margin = ((profit / price) * 100).toFixed(1);
+  const markup = ((profit / cost) * 100).toFixed(1);
+  pv.textContent = 'R$ ' + Math.abs(profit).toLocaleString('pt-BR');
+  pp.textContent = margin + '%';
+  pm.textContent = markup + '%';
+  ps.textContent = profit > 0 ? '✅ Positivo' : '❌ Negativo';
+  const cls = 'profit-box-value' + (profit < 0 ? ' loss' : '');
+  pv.className = cls; pp.className = cls; pm.className = cls; ps.className = cls;
+}
+
+// ══════════════════════════════════
+// UPGRADES
+// ══════════════════════════════════
+function addUpgrade() {
+  const d = document.createElement('div'); d.className = 'ui';
+  d.innerHTML = `<input class="fi" type="text" placeholder="Descreva o diferencial"><button class="urm" onclick="removeUpgrade(this)">×</button>`;
+  document.getElementById('upgrades-list').appendChild(d);
+}
+function removeUpgrade(btn) { if (document.querySelectorAll('.ui').length > 1) btn.parentElement.remove(); }
+
+// ══════════════════════════════════
+// SAVE CAR
+// ══════════════════════════════════
+function saveCar() {
+  const brand = document.getElementById('f-brand').value.trim();
+  const model = document.getElementById('f-model').value.trim();
+  const price = document.getElementById('f-price').value.trim();
+  if (!brand || !model || !price) { showAlert('Preencha Marca, Modelo e Preço.', 'error'); return; }
+  if (!uploadedPhotos.length) { showAlert('Adicione pelo menos 1 foto.', 'error'); return; }
+  const upgrades = [...document.querySelectorAll('.ui input')].map(i => i.value.trim()).filter(Boolean);
+  const badges = ['b1','b2','b3','b4'].map(id => document.getElementById(id).value.trim()).filter(Boolean);
+  const car = {
+    id: Date.now().toString(), brand, model,
+    subtitle: document.getElementById('f-subtitle').value.trim(),
+    tipo: document.getElementById('f-tipo').value,
+    price, cost: document.getElementById('f-cost').value.trim(),
+    year: document.getElementById('f-year').value.trim(),
+    km: document.getElementById('f-km').value.trim(),
+    color: document.getElementById('f-color').value.trim(),
+    engine: document.getElementById('f-engine').value.trim(),
+    power: document.getElementById('f-power').value.trim(),
+    gear: document.getElementById('f-gear').value.trim(),
+    accel: document.getElementById('f-accel').value.trim(),
+    vmax: document.getElementById('f-vmax').value.trim(),
+    upgrades, badges,
+    destaque: document.getElementById('f-destaque').checked,
+    sold: false, views: 0,
+    photos: [...uploadedPhotos]
+  };
+  cars.push(car);
+  saveCars();
+  showAlert('Veículo publicado com sucesso!', 'success');
+  resetForm();
+  setTimeout(() => { showATab('manage'); renderAdmin(); }, 1600);
+}
+
+function saveCars() { localStorage.setItem('ltm_cars_v2', JSON.stringify(cars)); }
+
+function resetForm() {
+  ['f-brand','f-model','f-subtitle','f-price','f-cost','f-year','f-km','f-color','f-engine','f-power','f-gear','f-accel','f-vmax','b1','b2','b3','b4'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-destaque').checked = false;
+  uploadedPhotos = []; renderPreviews();
+  document.getElementById('upgrades-list').innerHTML = `<div class="ui"><input class="fi" type="text" placeholder="Ex: Escape Akrapovic"><button class="urm" onclick="removeUpgrade(this)">×</button></div>`;
+  calcProfit();
+}
+
+function showAlert(msg, type) {
+  const el = document.getElementById('form-alert');
+  el.textContent = msg; el.className = 'alert ' + type + ' show';
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+// ══════════════════════════════════
+// RENDER HOME
+// ══════════════════════════════════
+function renderHome() {
+  const avail = cars.filter(c => !c.sold);
+  const sold = cars.filter(c => c.sold);
+  document.getElementById('stat-total').textContent = avail.length;
+  document.getElementById('stat-sold').textContent = sold.length;
+  const dest = cars.filter(c => c.destaque).slice(0, 6);
+  const grid = document.getElementById('destaques-grid');
+  if (!dest.length) { grid.innerHTML = '<div style="grid-column:1/-1;padding:60px;text-align:center;color:var(--muted);font-size:12px;">Marque veículos como destaque no painel admin.</div>'; return; }
+  grid.innerHTML = dest.map(car => `
+    <div class="destaque-card" onclick="openCarModal('${car.id}')">
+      ${car.photos.length ? `<img src="${car.photos[0]}" alt="${car.brand} ${car.model}" style="width:100%;height:100%;object-fit:cover;">` : '<div style="width:100%;height:100%;background:var(--dark3);display:flex;align-items:center;justify-content:center;font-size:40px;color:rgba(201,168,76,0.1);">🏎</div>'}
+      <div class="destaque-overlay">
+        <div class="destaque-tag">${car.tipo}</div>
+        <div class="destaque-name">${car.brand} ${car.model}</div>
+        <div class="destaque-price">${car.price}</div>
+      </div>
+      ${car.sold ? '<div class="destaque-badge sold">Vendido</div>' : '<div class="destaque-badge">Disponível</div>'}
+      <div class="destaque-views">👁 ${car.views || 0}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════
+// RENDER ESTOQUE
+// ══════════════════════════════════
+function renderEstoque(list) {
+  const grid = document.getElementById('estoque-grid');
+  if (!list.length) { grid.innerHTML = '<div class="no-results" style="grid-column:1/-1;">Nenhum veículo encontrado.</div>'; return; }
+  grid.innerHTML = list.map(car => buildCarCard(car)).join('');
+}
+
+function buildCarCard(car) {
+  const wa = encodeURIComponent('Olá Lucas, tenho interesse no '+car.brand+' '+car.model+(car.year?' '+car.year:'')+'. Podemos conversar?');
+  return `<div class="car-card" onclick="openCarModal('${car.id}')">
+    <div class="views-badge">👁 ${car.views||0}</div>
+    ${car.tipo?`<div class="card-tipo-badge">${car.tipo}</div>`:''}
+    <div class="car-card-img-wrap">
+      ${car.photos.length?`<img class="car-card-img" src="${car.photos[0]}" alt="${car.brand} ${car.model}">`:'<div class="car-card-img-placeholder">🏎</div>'}
+    </div>
+    <div class="car-card-body">
+      <div class="car-card-brand">${car.brand}</div>
+      <div class="car-card-name">${car.model}</div>
+      ${car.subtitle?`<div class="car-card-sub">${car.subtitle}</div>`:''}
+      <div class="car-card-price">${car.price}</div>
+      <div class="car-card-meta">
+        ${car.year?`<span class="car-card-tag">${car.year}</span>`:''}
+        ${car.km?`<span class="car-card-tag">${car.km}</span>`:''}
+        ${car.color?`<span class="car-card-tag">${car.color}</span>`:''}
+      </div>
+      <a href="https://wa.me/5521979392718?text=${wa}" class="car-card-btn" target="_blank" onclick="event.stopPropagation()">Consultar via WhatsApp →</a>
+    </div>
+    ${car.sold?'<div class="sold-overlay"><div class="sold-badge">Vendido</div></div>':''}
+  </div>`;
+}
+
+
+function filterEstoque() {
+  const q = document.getElementById('search-q').value.toLowerCase();
+  const tipo = document.getElementById('search-tipo').value;
+  const filtered = cars.filter(c => {
+    const matchQ = !q || (c.brand+' '+c.model).toLowerCase().includes(q);
+    const matchT = !tipo || c.tipo === tipo;
+    return matchQ && matchT;
   });
+  renderEstoque(filtered);
+}
 
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 120);
-      }
-    });
-  }, { threshold: 0.1 });
+// ══════════════════════════════════
+// BUSCA
+// ══════════════════════════════════
+function doBusca() {
+  const marca = document.getElementById('b-marca').value.toLowerCase().trim();
+  const modelo = document.getElementById('b-modelo').value.toLowerCase().trim();
+  if (!marca && !modelo) { document.getElementById('busca-label').textContent = ''; document.getElementById('busca-grid').innerHTML = ''; return; }
+  const res = cars.filter(c => {
+    const m = !marca || c.brand.toLowerCase().includes(marca);
+    const mo = !modelo || c.model.toLowerCase().includes(modelo);
+    return m && mo;
+  });
+  const lbl = document.getElementById('busca-label');
+  lbl.innerHTML = `<span>${res.length}</span> resultado${res.length !== 1 ? 's' : ''} encontrado${res.length !== 1 ? 's' : ''}`;
+  const grid = document.getElementById('busca-grid');
+  if (!res.length) { grid.innerHTML = `<div style="padding:60px;text-align:center;color:var(--muted);font-size:12px;grid-column:1/-1;">Nenhum veículo encontrado. <a href="https://wa.me/5521979392718?text=${encodeURIComponent('Olá Lucas, estou procurando um '+marca+' '+modelo+' e não encontrei no site. Você tem ou consegue?')}" target="_blank" style="color:var(--gold);text-decoration:none;">Clique aqui para solicitar via WhatsApp →</a></div>`; return; }
+  grid.innerHTML = res.map(c => buildCarCard(c)).join('');
+}
 
-  reveals.forEach(el => observer.observe(el));
+// ══════════════════════════════════
+// MODAL
+// ══════════════════════════════════
+function openCarModal(id) {
+  const car = cars.find(c => c.id === id);
+  if (!car) return;
+  car.views = (car.views || 0) + 1;
+  saveCars();
+  modalCar = car; modalIdx = 0;
+  document.getElementById('modal-main').src = car.photos[0] || '';
+  document.getElementById('modal-thumbs').innerHTML = car.photos.map((s,i) =>
+    `<img class="modal-thumb ${i===0?'active':''}" src="${s}" onclick="setModalPhoto(${i})">`
+  ).join('');
+  const wa = encodeURIComponent(`Olá Lucas, tenho interesse no ${car.brand} ${car.model}${car.year?' '+car.year:''}. Podemos conversar?`);
+  const specs = [
+    car.km && `<div class="mspec"><div class="mspec-l">Quilometragem</div><div class="mspec-v">${car.km}</div></div>`,
+    car.year && `<div class="mspec"><div class="mspec-l">Ano</div><div class="mspec-v">${car.year}</div></div>`,
+    car.accel && `<div class="mspec"><div class="mspec-l">0—100 km/h</div><div class="mspec-v">${car.accel}</div></div>`,
+    car.vmax && `<div class="mspec"><div class="mspec-l">Vel. Máxima</div><div class="mspec-v">${car.vmax}</div></div>`,
+    car.power && `<div class="mspec"><div class="mspec-l">Potência</div><div class="mspec-v">${car.power}</div></div>`,
+    car.gear && `<div class="mspec"><div class="mspec-l">Câmbio</div><div class="mspec-v">${car.gear}</div></div>`,
+  ].filter(Boolean).join('');
+  document.getElementById('modal-info').innerHTML = `
+    <div class="modal-brand">${car.brand}${car.year?' · '+car.year:''}</div>
+    <div class="modal-name">${car.model}</div>
+    ${car.subtitle?`<div class="modal-sub">${car.subtitle}</div>`:''}
+    <div class="modal-price"><small>Preço</small>${car.price}</div>
+    ${specs?`<div class="modal-specs">${specs}</div>`:''}
+    ${car.upgrades&&car.upgrades.length?`<div class="modal-ups">Upgrades</div><ul class="modal-ulist">${car.upgrades.map(u=>`<li>${u}</li>`).join('')}</ul>`:''}
+    ${car.badges&&car.badges.length?`<div class="modal-badges">${car.badges.map(b=>`<span class="modal-badge">${b}</span>`).join('')}</div>`:''}
+    <div class="modal-cta">
+      <a href="https://wa.me/5521979392718?text=${wa}" class="btn-gold" style="border:none;cursor:pointer;text-align:center;" target="_blank">Consultar via WhatsApp</a>
+      <a href="https://instagram.com/telles.ltm" class="btn-outline" style="justify-content:center;" target="_blank">Ver no Instagram</a>
+    </div>`;
+  document.getElementById('car-modal').classList.add('open');
+}
+
+function setModalPhoto(i) {
+  modalIdx = i;
+  document.getElementById('modal-main').src = modalCar.photos[i];
+  document.querySelectorAll('.modal-thumb').forEach((t,j) => t.classList.toggle('active', j===i));
+}
+function modalPrev() { let i = modalIdx-1; if(i<0) i=modalCar.photos.length-1; setModalPhoto(i); }
+function modalNext() { let i = modalIdx+1; if(i>=modalCar.photos.length) i=0; setModalPhoto(i); }
+function closeModal() { document.getElementById('car-modal').classList.remove('open'); }
+
+// ══════════════════════════════════
+// ADMIN
+// ══════════════════════════════════
+function showATab(id) {
+  document.querySelectorAll('.apanel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.atab').forEach(t => t.classList.remove('active'));
+  document.getElementById('apanel-'+id).classList.add('active');
+  document.querySelectorAll('.atab')[id==='add'?0:1].classList.add('active');
+}
+
+function renderAdmin() {
+  const total = cars.length;
+  const avail = cars.filter(c => !c.sold).length;
+  const soldN = cars.filter(c => c.sold).length;
+  const totalViews = cars.reduce((a,c) => a+(c.views||0), 0);
+  document.getElementById('admin-stats').innerHTML = `
+    <div class="astat"><div class="astat-n">${total}</div><div class="astat-l">Total Cadastrados</div></div>
+    <div class="astat"><div class="astat-n">${avail}</div><div class="astat-l">Disponíveis</div></div>
+    <div class="astat"><div class="astat-n">${soldN}</div><div class="astat-l">Vendidos</div></div>
+    <div class="astat"><div class="astat-n">${totalViews}</div><div class="astat-l">Visualizações</div></div>`;
+  renderManage();
+}
+
+function renderManage() {
+  const list = document.getElementById('manage-list');
+  if (!cars.length) { list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);">Nenhum veículo cadastrado.</div>'; return; }
+  list.innerHTML = cars.map(car => `
+    <div class="mitem">
+      ${car.photos.length?`<img class="mthumb" src="${car.photos[0]}">`:'<div class="mthumb" style="background:var(--dark3);display:flex;align-items:center;justify-content:center;font-size:18px;">🏎</div>'}
+      <div class="minfo">
+        <div class="mname">${car.brand} ${car.model}</div>
+        <div class="mmeta">${car.year||''} ${car.km?'· '+car.km:''} · ${car.price} · 👁 ${car.views||0} · ${car.sold?'🔴 Vendido':'🟢 Disponível'}</div>
+      </div>
+      <div class="mactions">
+        <button class="mbtn mbtn-sold ${car.sold?'marked':''}" onclick="toggleSold('${car.id}')">${car.sold?'Reativar':'Marcar Vendido'}</button>
+        <button class="mbtn mbtn-del" onclick="deleteCar('${car.id}')">Excluir</button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleSold(id) {
+  const car = cars.find(c => c.id === id);
+  if (car) { car.sold = !car.sold; saveCars(); renderAdmin(); }
+}
+
+function deleteCar(id) {
+  if (!confirm('Remover este veículo do estoque?')) return;
+  cars = cars.filter(c => c.id !== id);
+  saveCars(); renderAdmin();
+}
+
+// ══════════════════════════════════
+// SOLICITAR
+// ══════════════════════════════════
+function enviarSolicitacao() {
+  const nome = document.getElementById('sol-nome').value.trim();
+  const tel = document.getElementById('sol-tel').value.trim();
+  const carro = document.getElementById('sol-carro').value.trim();
+  const budget = document.getElementById('sol-budget').value.trim();
+  if (!nome || !carro) { alert('Preencha seu nome e o veículo que procura.'); return; }
+  const msg = `Olá Lucas! Me chamo ${nome}${tel?' ('+tel+')':''}.\n\nEstou procurando: ${carro}${budget?'\nOrçamento: '+budget:''}.\n\nVim pelo site da LTM Automotive.`;
+  window.open('https://wa.me/5521979392718?text='+encodeURIComponent(msg), '_blank');
+}
+
+// ══════════════════════════════════
+// LIGHTBOX
+// ══════════════════════════════════
+function openLightbox(src) { document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').classList.add('open'); }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape'){closeLightbox();closeModal();} });
+
+// INIT
+renderHome();
 </script>
 </body>
 </html>
