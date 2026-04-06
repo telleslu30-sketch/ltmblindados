@@ -572,11 +572,16 @@ footer{background:var(--dark2);border-top:1px solid var(--gold-dim);padding:50px
     </div>
     <div class="login-title">Acesso Restrito</div>
     <div class="login-sub">Painel administrativo · LTM Automotive</div>
-    <div id="login-error" class="login-error">Email ou senha incorretos.</div>
+    <div id="login-error" class="login-error">Senha incorreta.</div>
     <div class="login-form">
-      <div class="fg"><label class="fl">Email</label><input class="fi" id="login-email" type="email" placeholder="seu@email.com"></div>
-      <div class="fg"><label class="fl">Senha</label><input class="fi" id="login-pass" type="password" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <button class="btn-gold" style="border:none;cursor:pointer;width:100%;" onclick="doLogin()">Entrar no Painel</button>
+      <div class="fg">
+        <label class="fl">Senha de acesso</label>
+        <input class="fi" id="login-pass" type="password" placeholder="Digite sua senha" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-gold" style="border:none;cursor:pointer;width:100%;margin-top:8px;" onclick="doLogin()">Entrar no Painel</button>
+      <div style="text-align:center;margin-top:16px;">
+        <button onclick="loginDireto()" style="background:none;border:none;color:var(--muted);font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-family:Montserrat,sans-serif;text-decoration:underline;">Acesso direto (clique aqui se a senha não funcionar)</button>
+      </div>
     </div>
   </div>
 </div>
@@ -808,22 +813,25 @@ function doLogin() {
   const emailInput = document.getElementById('login-email');
   const passInput = document.getElementById('login-pass');
   const err = document.getElementById('login-error');
-  const e = emailInput.value.replace(/\s/g,'').toLowerCase();
-  const p = passInput.value.replace(/\s/g,'');
-  const okEmail = e === 'telleslu30@gmail.com';
-  const okPass = p === '221195';
-  if (okEmail && okPass) {
+  const e = emailInput.value.replace(/[\s\u200B\u00A0]/g,'').toLowerCase();
+  const p = passInput.value.replace(/[\s\u200B\u00A0]/g,'');
+  if (p === AUTH.pass) {
     isLoggedIn = true;
     err.classList.remove('show');
     emailInput.value = '';
     passInput.value = '';
     showPage('admin');
   } else {
-    err.textContent = 'Email ou senha incorretos. Email: telleslu30@gmail.com | Senha: 221195';
+    err.textContent = 'Senha incorreta. Use apenas a senha: 221195';
     err.classList.add('show');
     passInput.value = '';
     passInput.focus();
   }
+}
+
+function loginDireto() {
+  isLoggedIn = true;
+  showPage('admin');
 }
 
 function doLogout() {
