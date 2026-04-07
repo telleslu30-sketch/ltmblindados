@@ -197,6 +197,9 @@ body{background:var(--black);color:var(--text);font-family:'Montserrat',sans-ser
     <!-- STATS TOPO -->
     <div class="stats-grid" id="stats-grid"></div>
 
+    <!-- ARMAZENAMENTO -->
+    <div id="storage-info" style="background:var(--dark2);border:1px solid var(--gold-dim);padding:16px 20px;margin-bottom:20px;"></div>
+
     <!-- TABS -->
     <div class="atabs">
       <button class="atab active" onclick="showTab('add')">+ Adicionar Veículo</button>
@@ -363,6 +366,7 @@ function renderStats() {
     <div class="stat-box"><div class="stat-n">${disp}</div><div class="stat-l">Disponíveis</div></div>
     <div class="stat-box"><div class="stat-n">${vendidos}</div><div class="stat-l">Vendidos</div></div>
     <div class="stat-box"><div class="stat-n">${views}</div><div class="stat-l">Visualizações</div></div>`;
+  atualizarStorageInfo();
 }
 
 // ─── UPLOAD ───
@@ -370,10 +374,17 @@ function handlePhotos(files) {
   const rem = 15 - photos.length;
   const add = Math.min(files.length, rem);
   if (!add) { showAlert('Limite de 15 fotos atingido.','error'); return; }
+  const countEl = document.getElementById('photo-count');
+  countEl.textContent = '⏳ processando...';
   let done = 0;
   for (let i=0;i<add;i++) {
     const r = new FileReader();
-    r.onload = e => { comprimirImagem(e.target.result, c => { photos.push(c); done++; if(done===add) renderPreviews(); }); };
+    r.onload = e => {
+      comprimirImagem(e.target.result, c => {
+        photos.push(c); done++;
+        if(done===add) renderPreviews();
+      });
+    };
     r.readAsDataURL(files[i]);
   }
 }
@@ -383,6 +394,24 @@ function renderPreviews() {
   document.getElementById('photos-preview').innerHTML = photos.map((s,i)=>
     `<div class="ppitem"><img src="${s}"><button class="pprm" onclick="rmPhoto(${i})">×</button><div class="ppnum">${i+1}</div></div>`
   ).join('');
+  atualizarStorageInfo();
+}
+
+function atualizarStorageInfo() {
+  try {
+    const dados = JSON.stringify(cars);
+    const kb = Math.round((dados.length * 2) / 1024);
+    const pct = Math.min(Math.round((kb / 5120) * 100), 100);
+    const cor = pct > 80 ? '#e53935' : pct > 60 ? '#C9A84C' : '#43a047';
+    const el = document.getElementById('storage-info');
+    if(el) {
+      el.innerHTML = `<div style="font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:6px;">ARMAZENAMENTO USADO</div>
+        <div style="background:var(--dark3);height:6px;border-radius:3px;overflow:hidden;margin-bottom:4px;">
+          <div style="height:100%;width:${pct}%;background:${cor};transition:width 0.3s;"></div>
+        </div>
+        <div style="font-size:9px;color:${cor};">${kb}KB / 5.000KB (${pct}%)</div>`;
+    }
+  } catch(e) {}
 }
 
 function rmPhoto(i) { photos.splice(i,1); renderPreviews(); }
@@ -435,7 +464,7 @@ function salvarCarro() {
   const price = document.getElementById('f-price').value.trim();
   if (!brand||!model||!price) { showAlert('Preencha Marca, Modelo e Preço.','error'); return; }
   if (!photos.length) { showAlert('Adicione pelo menos 1 foto.','error'); return; }
-  const upgrades = [...document.querySelectorAll('.ui input')].map(i=>i.value.trim()).filter(Boolean);
+  const upgrades = [...document.querySelectorAll('#upgrades-list .ui input')].map(i=>i.value.trim()).filter(Boolean);
   const car = {
     id: Date.now().toString(), brand, model,
     subtitle: document.getElementById('f-subtitle').value.trim(),
@@ -455,11 +484,16 @@ function salvarCarro() {
     photos: [...photos]
   };
   cars.push(car);
-  salvar();
-  showAlert('✅ Veículo publicado com sucesso no estoque!','success');
-  resetForm();
-  renderStats();
-  setTimeout(()=>showTab('manage'), 1800);
+  try {
+    salvar();
+    showAlert('✅ Veículo publicado com sucesso!','success');
+    resetForm();
+    renderStats();
+    setTimeout(()=>showTab('manage'), 1800);
+  } catch(e) {
+    cars.pop();
+    showAlert('❌ Erro ao salvar. Tente com menos fotos ou reduza a qualidade das imagens.','error');
+  }
 }
 
 function salvar() {
@@ -474,14 +508,15 @@ function comprimirImagem(dataUrl, callback) {
   const img = new Image();
   img.onload = function() {
     const canvas = document.createElement('canvas');
-    const max = 1200;
+    const max = 900;
     let w = img.width, h = img.height;
-    if(w > max) { h = h*(max/w); w = max; }
-    if(h > max) { w = w*(max/h); h = max; }
+    if(w > max) { h = Math.round(h*(max/w)); w = max; }
+    if(h > max) { w = Math.round(w*(max/h)); h = max; }
     canvas.width = w; canvas.height = h;
     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-    callback(canvas.toDataURL('image/jpeg', 0.75));
+    callback(canvas.toDataURL('image/jpeg', 0.60));
   };
+  img.onerror = () => callback(dataUrl);
   img.src = dataUrl;
 }
 
