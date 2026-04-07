@@ -545,9 +545,50 @@ function renderMetrics() {
 }
 
 // ─── EDITAR ───
+let editPhotos = []; // fotos atuais do carro sendo editado
+
+function renderEditPhotos() {
+  const grid = document.getElementById('edit-photos-grid');
+  const count = document.getElementById('edit-photo-count');
+  count.textContent = editPhotos.length;
+  grid.innerHTML = editPhotos.map((src, i) => `
+    <div style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid var(--gold-dim);background:var(--dark);">
+      <img src="${src}" style="width:100%;height:100%;object-fit:cover;">
+      <button onclick="removeEditPhoto(${i})" style="position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(229,57,53,0.9);color:white;border:none;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">×</button>
+      <div style="position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,0.75);color:var(--gold);font-size:7px;padding:2px 5px;">${i+1}</div>
+      ${i===0?`<div style="position:absolute;top:3px;left:3px;background:var(--gold);color:#000;font-size:6px;letter-spacing:1px;padding:2px 5px;font-weight:700;">CAPA</div>`:''}
+    </div>`).join('');
+}
+
+function removeEditPhoto(i) {
+  if(editPhotos.length <= 1) { alert('O veículo precisa ter pelo menos 1 foto.'); return; }
+  editPhotos.splice(i, 1);
+  renderEditPhotos();
+}
+
+function handleEditPhotos(files) {
+  const rem = 15 - editPhotos.length;
+  const toAdd = Math.min(files.length, rem);
+  if(!toAdd) { alert('Limite de 15 fotos atingido.'); return; }
+  let done = 0;
+  for(let i=0; i<toAdd; i++) {
+    const r = new FileReader();
+    r.onload = e => { editPhotos.push(e.target.result); done++; if(done===toAdd) renderEditPhotos(); };
+    r.readAsDataURL(files[i]);
+  }
+}
+
+// drag para upload no modal de edição
+const euz = document.getElementById('edit-upload-zone');
+euz.addEventListener('dragover', e=>{e.preventDefault();euz.classList.add('over');});
+euz.addEventListener('dragleave', ()=>euz.classList.remove('over'));
+euz.addEventListener('drop', e=>{e.preventDefault();euz.classList.remove('over');handleEditPhotos(e.dataTransfer.files);});
+
 function abrirEdit(id) {
   const car = cars.find(c=>c.id===id);
   if(!car) return;
+  editPhotos = [...(car.photos||[])];
+  renderEditPhotos();
   document.getElementById('edit-id').value = id;
   document.getElementById('e-brand').value = car.brand||'';
   document.getElementById('e-model').value = car.model||'';
@@ -621,6 +662,7 @@ function salvarEdit() {
   car.price=price; car.cost=document.getElementById('e-cost').value.trim();
   car.destaque=document.getElementById('e-destaque').checked;
   car.upgrades=[...document.querySelectorAll('#edit-upgrades .ui input')].map(i=>i.value.trim()).filter(Boolean);
+  car.photos = editPhotos.length > 0 ? editPhotos : car.photos;
   salvar();
   const a=document.getElementById('edit-alert');a.textContent='✅ Alterações salvas com sucesso!';a.className='alert success show';
   setTimeout(()=>{a.classList.remove('show');fecharEdit();renderManage();renderStats();},1500);
@@ -634,6 +676,23 @@ function salvarEdit() {
     <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--white);margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid rgba(201,168,76,0.1);">✏️ Editar Veículo</div>
     <div id="edit-alert" class="alert"></div>
     <input type="hidden" id="edit-id">
+
+    <!-- FOTOS -->
+    <div style="background:var(--dark3);border:1px solid var(--gold-dim);padding:20px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);">📸 Fotos do Veículo</div>
+        <div style="font-size:9px;color:var(--muted);">Arraste para reordenar · <span id="edit-photo-count" style="color:var(--gold);">0</span> / 15</div>
+      </div>
+      <!-- Fotos atuais -->
+      <div id="edit-photos-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px;"></div>
+      <!-- Upload novas -->
+      <div class="upload-zone" id="edit-upload-zone" style="padding:24px;">
+        <input type="file" id="edit-photo-input" accept="image/*" multiple onchange="handleEditPhotos(this.files)">
+        <div class="upload-icon" style="font-size:22px;margin-bottom:6px;">📁</div>
+        <div class="upload-txt" style="font-size:10px;"><strong>Adicionar novas fotos</strong><br>As fotos novas serão adicionadas às existentes</div>
+      </div>
+    </div>
+
     <div class="frow">
       <div class="fg"><label class="fl">Marca *</label><input class="fi" id="e-brand" type="text"></div>
       <div class="fg"><label class="fl">Modelo *</label><input class="fi" id="e-model" type="text"></div>
