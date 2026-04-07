@@ -62,7 +62,7 @@ body{background:var(--black);color:var(--text);font-family:'Montserrat',sans-ser
 /* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:28px;}
 .stat-box{background:var(--dark2);border:1px solid var(--gold-dim);padding:22px;text-align:center;}
-.stat-n{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--gold);line-height:1;margin-bottom:8px;}
+.stat-n{font-family:Arial,sans-serif;font-size:38px;color:var(--gold);line-height:1;margin-bottom:8px;font-weight:700;}
 .stat-l{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
 
 /* SECTIONS */
@@ -76,7 +76,7 @@ body{background:var(--black);color:var(--text);font-family:'Montserrat',sans-ser
 .profit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:12px;}
 .profit-box{background:var(--dark3);border:1px solid rgba(201,168,76,0.12);padding:16px;text-align:center;}
 .profit-label{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-.profit-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);}
+.profit-val{font-family:Arial,sans-serif;font-size:20px;color:var(--gold);font-weight:700;}
 .profit-val.loss{color:var(--red);}
 
 /* UPLOAD */
@@ -222,41 +222,39 @@ body{background:var(--black);color:var(--text);font-family:'Montserrat',sans-ser
       <div class="asec">
         <div class="asec-title">🚗 Informações do Veículo</div>
         <div class="frow">
-          <div class="fg"><label class="fl">Marca *</label><input class="fi" id="f-brand" type="text" placeholder="Ferrari"></div>
-          <div class="fg"><label class="fl">Modelo *</label><input class="fi" id="f-model" type="text" placeholder="F8 Spider"></div>
+          <div class="fg"><label class="fl">Marca *</label><input class="fi" id="f-brand" type="text" placeholder=""></div>
+          <div class="fg"><label class="fl">Modelo *</label><input class="fi" id="f-model" type="text" placeholder=""></div>
         </div>
         <div class="frow">
-          <div class="fg"><label class="fl">Subtítulo</label><input class="fi" id="f-subtitle" type="text" placeholder="3.9 V8 Biturbo · 720 cv"></div>
+          <div class="fg"><label class="fl">Subtítulo</label><input class="fi" id="f-subtitle" type="text" placeholder=""></div>
           <div class="fg"><label class="fl">Tipo</label>
             <select class="fi" id="f-tipo" style="cursor:pointer;">
               <option value="superesportivo">Superesportivo</option>
               <option value="blindado">Blindado</option>
-              <option value="luxo">Luxo</option>
-              <option value="suv">SUV de Luxo</option>
             </select>
           </div>
         </div>
         <div class="frow3">
-          <div class="fg"><label class="fl">Ano</label><input class="fi" id="f-year" type="text" placeholder="2021"></div>
-          <div class="fg"><label class="fl">Quilometragem</label><input class="fi" id="f-km" type="text" placeholder="6.500 km"></div>
-          <div class="fg"><label class="fl">Cor</label><input class="fi" id="f-color" type="text" placeholder="Rosso Corsa"></div>
+          <div class="fg"><label class="fl">Ano</label><input class="fi" id="f-year" type="text" placeholder=""></div>
+          <div class="fg"><label class="fl">Quilometragem</label><input class="fi" id="f-km" type="text" placeholder=""></div>
+          <div class="fg"><label class="fl">Cor</label><input class="fi" id="f-color" type="text" placeholder=""></div>
         </div>
         <div class="frow3">
-          <div class="fg"><label class="fl">Motor</label><input class="fi" id="f-engine" type="text" placeholder="3.9 V8 Biturbo"></div>
-          <div class="fg"><label class="fl">Potência</label><input class="fi" id="f-power" type="text" placeholder="720 cv"></div>
-          <div class="fg"><label class="fl">Câmbio</label><input class="fi" id="f-gear" type="text" placeholder="F1-DCT 7 marchas"></div>
+          <div class="fg"><label class="fl">Motor</label><input class="fi" id="f-engine" type="text" placeholder=""></div>
+          <div class="fg"><label class="fl">Potência</label><input class="fi" id="f-power" type="text" placeholder=""></div>
+          <div class="fg"><label class="fl">Câmbio</label><input class="fi" id="f-gear" type="text" placeholder=""></div>
         </div>
         <div class="frow">
-          <div class="fg"><label class="fl">0 — 100 km/h</label><input class="fi" id="f-accel" type="text" placeholder="2,9 segundos"></div>
-          <div class="fg"><label class="fl">Velocidade Máxima</label><input class="fi" id="f-vmax" type="text" placeholder="340 km/h"></div>
+          <div class="fg"><label class="fl">0 — 100 km/h</label><input class="fi" id="f-accel" type="text" placeholder=""></div>
+          <div class="fg"><label class="fl">Velocidade Máxima</label><input class="fi" id="f-vmax" type="text" placeholder=""></div>
         </div>
       </div>
 
       <div class="asec">
         <div class="asec-title">💰 Financeiro <span style="font-family:Montserrat;font-size:9px;color:var(--muted);font-weight:300;">— visível só para você</span></div>
         <div class="frow">
-          <div class="fg"><label class="fl">Preço de Venda (público) *</label><input class="fi" id="f-price" type="text" placeholder="R$ 4.199.000" oninput="calcProfit()"></div>
-          <div class="fg"><label class="fl">Custo / Preço do Lojista</label><input class="fi" id="f-cost" type="text" placeholder="R$ 3.900.000" oninput="calcProfit()"></div>
+          <div class="fg"><label class="fl">Preço de Venda (público) *</label><input class="fi" id="f-price" type="text" placeholder="" oninput="calcProfit()"></div>
+          <div class="fg"><label class="fl">Custo / Preço do Lojista</label><input class="fi" id="f-cost" type="text" placeholder="" oninput="calcProfit()"></div>
         </div>
         <div class="profit-grid">
           <div class="profit-box"><div class="profit-label">Lucro Bruto</div><div class="profit-val" id="p-lucro">—</div></div>
@@ -267,23 +265,11 @@ body{background:var(--black);color:var(--text);font-family:'Montserrat',sans-ser
       </div>
 
       <div class="asec">
-        <div class="asec-title">⚡ Upgrades & Diferenciais</div>
+        <div class="asec-title">📋 Observações e Upgrades <span style="font-family:Montserrat;font-size:9px;color:var(--muted);font-weight:300;">— fatos relevantes do veículo</span></div>
         <div class="ugl" id="upgrades-list">
-          <div class="ui"><input class="fi" type="text" placeholder="Ex: Escape Akrapovic — performance sonora"><button class="urm" onclick="rmUpgrade(this)">×</button></div>
+          <div class="ui"><input class="fi" type="text" placeholder=""><button class="urm" onclick="rmUpgrade(this)">×</button></div>
         </div>
-        <button class="addu" onclick="addUpgrade()">+ Adicionar item</button>
-      </div>
-
-      <div class="asec">
-        <div class="asec-title">🏷 Selos</div>
-        <div class="frow">
-          <div class="fg"><label class="fl">Selo 1</label><input class="fi" id="b1" type="text" placeholder="Importação Oficial"></div>
-          <div class="fg"><label class="fl">Selo 2</label><input class="fi" id="b2" type="text" placeholder="PPF Full"></div>
-        </div>
-        <div class="frow">
-          <div class="fg"><label class="fl">Selo 3</label><input class="fi" id="b3" type="text" placeholder="Revisado Concessionária"></div>
-          <div class="fg"><label class="fl">Selo 4</label><input class="fi" id="b4" type="text" placeholder="Entrega Nacional"></div>
-        </div>
+        <button class="addu" onclick="addUpgrade()">+ Adicionar observação</button>
       </div>
 
       <div class="asec">
@@ -450,7 +436,6 @@ function salvarCarro() {
   if (!brand||!model||!price) { showAlert('Preencha Marca, Modelo e Preço.','error'); return; }
   if (!photos.length) { showAlert('Adicione pelo menos 1 foto.','error'); return; }
   const upgrades = [...document.querySelectorAll('.ui input')].map(i=>i.value.trim()).filter(Boolean);
-  const badges = ['b1','b2','b3','b4'].map(id=>document.getElementById(id).value.trim()).filter(Boolean);
   const car = {
     id: Date.now().toString(), brand, model,
     subtitle: document.getElementById('f-subtitle').value.trim(),
@@ -464,7 +449,7 @@ function salvarCarro() {
     gear: document.getElementById('f-gear').value.trim(),
     accel: document.getElementById('f-accel').value.trim(),
     vmax: document.getElementById('f-vmax').value.trim(),
-    upgrades, badges,
+    upgrades, badges: [],
     destaque: document.getElementById('f-destaque').checked,
     sold: false, views: 0,
     photos: [...photos]
@@ -480,7 +465,7 @@ function salvarCarro() {
 function salvar() { localStorage.setItem('ltm_cars_v2', JSON.stringify(cars)); }
 
 function resetForm() {
-  ['f-brand','f-model','f-subtitle','f-price','f-cost','f-year','f-km','f-color','f-engine','f-power','f-gear','f-accel','f-vmax','b1','b2','b3','b4'].forEach(id=>document.getElementById(id).value='');
+  ['f-brand','f-model','f-subtitle','f-price','f-cost','f-year','f-km','f-color','f-engine','f-power','f-gear','f-accel','f-vmax'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-destaque').checked=false;
   photos=[]; renderPreviews(); calcProfit();
   document.getElementById('upgrades-list').innerHTML=`<div class="ui"><input class="fi" type="text" placeholder="Ex: Escape Akrapovic — performance sonora"><button class="urm" onclick="rmUpgrade(this)">×</button></div>`;
@@ -507,6 +492,7 @@ function renderManage() {
         ${lucroTxt}
       </div>
       <div class="mactions">
+        <button class="mbtn" style="background:none;border:1px solid var(--gold-dim) !important;color:var(--gold);" onclick="abrirEdit('${car.id}')">Editar</button>
         <button class="mbtn mbtn-sold${car.sold?' active':''}" onclick="toggleSold('${car.id}')">${car.sold?'Reativar':'Marcar Vendido'}</button>
         <button class="mbtn mbtn-del" onclick="deletar('${car.id}')">Excluir</button>
       </div>
@@ -557,6 +543,148 @@ function renderMetrics() {
     ? ranked.map((car,i)=>`<div class="rank-item"><div class="rank-num">${i+1}</div><div class="rank-name">${car.brand} ${car.model} ${car.year?'('+car.year+')':''}</div><div class="rank-views">👁 ${car.views||0} views</div></div>`).join('')
     : '<div style="color:var(--muted);font-size:11px;padding:20px;">Nenhum dado ainda.</div>';
 }
+
+// ─── EDITAR ───
+function abrirEdit(id) {
+  const car = cars.find(c=>c.id===id);
+  if(!car) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('e-brand').value = car.brand||'';
+  document.getElementById('e-model').value = car.model||'';
+  document.getElementById('e-subtitle').value = car.subtitle||'';
+  document.getElementById('e-tipo').value = car.tipo||'superesportivo';
+  document.getElementById('e-year').value = car.year||'';
+  document.getElementById('e-km').value = car.km||'';
+  document.getElementById('e-color').value = car.color||'';
+  document.getElementById('e-engine').value = car.engine||'';
+  document.getElementById('e-power').value = car.power||'';
+  document.getElementById('e-gear').value = car.gear||'';
+  document.getElementById('e-accel').value = car.accel||'';
+  document.getElementById('e-vmax').value = car.vmax||'';
+  document.getElementById('e-price').value = car.price||'';
+  document.getElementById('e-cost').value = car.cost||'';
+  document.getElementById('e-destaque').checked = car.destaque||false;
+  const ul = document.getElementById('edit-upgrades');
+  ul.innerHTML = (car.upgrades&&car.upgrades.length?car.upgrades:[''])
+    .map(u=>`<div class="ui"><input class="fi" type="text" value="${u}"><button class="urm" onclick="rmUpgrade(this)">×</button></div>`).join('');
+  calcProfitEdit();
+  document.getElementById('edit-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharEdit() {
+  document.getElementById('edit-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function addEditUpgrade() {
+  const d=document.createElement('div');d.className='ui';
+  d.innerHTML=`<input class="fi" type="text" placeholder=""><button class="urm" onclick="rmUpgrade(this)">×</button>`;
+  document.getElementById('edit-upgrades').appendChild(d);
+}
+
+function calcProfitEdit() {
+  const price = parseMoney(document.getElementById('e-price').value);
+  const cost = parseMoney(document.getElementById('e-cost').value);
+  const ids = ['ep-lucro','ep-margem','ep-markup','ep-status'];
+  if(!price||!cost){ids.forEach(id=>{const el=document.getElementById(id);el.textContent='—';el.className='profit-val';});return;}
+  const lucro=price-cost, margem=((lucro/price)*100).toFixed(1), markup=((lucro/cost)*100).toFixed(1), pos=lucro>=0;
+  document.getElementById('ep-lucro').textContent='R$ '+Math.abs(lucro).toLocaleString('pt-BR');
+  document.getElementById('ep-margem').textContent=margem+'%';
+  document.getElementById('ep-markup').textContent=markup+'%';
+  document.getElementById('ep-status').textContent=pos?'✅ Positivo':'❌ Negativo';
+  ids.forEach(id=>document.getElementById(id).className='profit-val'+(pos?'':' loss'));
+}
+
+function salvarEdit() {
+  const id = document.getElementById('edit-id').value;
+  const car = cars.find(c=>c.id===id);
+  if(!car) return;
+  const brand = document.getElementById('e-brand').value.trim();
+  const model = document.getElementById('e-model').value.trim();
+  const price = document.getElementById('e-price').value.trim();
+  if(!brand||!model||!price){
+    const a=document.getElementById('edit-alert');a.textContent='Preencha Marca, Modelo e Preço.';a.className='alert error show';
+    setTimeout(()=>a.classList.remove('show'),3000);return;
+  }
+  car.brand=brand; car.model=model;
+  car.subtitle=document.getElementById('e-subtitle').value.trim();
+  car.tipo=document.getElementById('e-tipo').value;
+  car.year=document.getElementById('e-year').value.trim();
+  car.km=document.getElementById('e-km').value.trim();
+  car.color=document.getElementById('e-color').value.trim();
+  car.engine=document.getElementById('e-engine').value.trim();
+  car.power=document.getElementById('e-power').value.trim();
+  car.gear=document.getElementById('e-gear').value.trim();
+  car.accel=document.getElementById('e-accel').value.trim();
+  car.vmax=document.getElementById('e-vmax').value.trim();
+  car.price=price; car.cost=document.getElementById('e-cost').value.trim();
+  car.destaque=document.getElementById('e-destaque').checked;
+  car.upgrades=[...document.querySelectorAll('#edit-upgrades .ui input')].map(i=>i.value.trim()).filter(Boolean);
+  salvar();
+  const a=document.getElementById('edit-alert');a.textContent='✅ Alterações salvas com sucesso!';a.className='alert success show';
+  setTimeout(()=>{a.classList.remove('show');fecharEdit();renderManage();renderStats();},1500);
+}
 </script>
+
+<!-- MODAL EDITAR HTML -->
+<div id="edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;overflow-y:auto;padding:30px 20px;">
+  <div style="background:var(--dark2);border:1px solid var(--gold-dim);max-width:800px;margin:auto;padding:36px;position:relative;">
+    <button onclick="fecharEdit()" style="position:absolute;top:14px;right:14px;background:none;border:1px solid var(--gold-dim);color:var(--gold);width:34px;height:34px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--white);margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid rgba(201,168,76,0.1);">✏️ Editar Veículo</div>
+    <div id="edit-alert" class="alert"></div>
+    <input type="hidden" id="edit-id">
+    <div class="frow">
+      <div class="fg"><label class="fl">Marca *</label><input class="fi" id="e-brand" type="text"></div>
+      <div class="fg"><label class="fl">Modelo *</label><input class="fi" id="e-model" type="text"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Subtítulo</label><input class="fi" id="e-subtitle" type="text"></div>
+      <div class="fg"><label class="fl">Tipo</label>
+        <select class="fi" id="e-tipo" style="cursor:pointer;">
+          <option value="superesportivo">Superesportivo</option>
+          <option value="blindado">Blindado</option>
+        </select>
+      </div>
+    </div>
+    <div class="frow3">
+      <div class="fg"><label class="fl">Ano</label><input class="fi" id="e-year" type="text"></div>
+      <div class="fg"><label class="fl">Quilometragem</label><input class="fi" id="e-km" type="text"></div>
+      <div class="fg"><label class="fl">Cor</label><input class="fi" id="e-color" type="text"></div>
+    </div>
+    <div class="frow3">
+      <div class="fg"><label class="fl">Motor</label><input class="fi" id="e-engine" type="text"></div>
+      <div class="fg"><label class="fl">Potência</label><input class="fi" id="e-power" type="text"></div>
+      <div class="fg"><label class="fl">Câmbio</label><input class="fi" id="e-gear" type="text"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">0 — 100 km/h</label><input class="fi" id="e-accel" type="text"></div>
+      <div class="fg"><label class="fl">Velocidade Máxima</label><input class="fi" id="e-vmax" type="text"></div>
+    </div>
+    <div style="background:var(--dark3);border:1px solid var(--gold-dim);padding:20px;margin-bottom:14px;">
+      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">💰 Financeiro</div>
+      <div class="frow" style="margin-bottom:10px;">
+        <div class="fg" style="margin-bottom:0;"><label class="fl">Preço de Venda *</label><input class="fi" id="e-price" type="text" oninput="calcProfitEdit()"></div>
+        <div class="fg" style="margin-bottom:0;"><label class="fl">Custo / Preço do Lojista</label><input class="fi" id="e-cost" type="text" oninput="calcProfitEdit()"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;">
+        <div class="profit-box"><div class="profit-label">Lucro Bruto</div><div class="profit-val" id="ep-lucro">—</div></div>
+        <div class="profit-box"><div class="profit-label">Margem %</div><div class="profit-val" id="ep-margem">—</div></div>
+        <div class="profit-box"><div class="profit-label">Markup %</div><div class="profit-val" id="ep-markup">—</div></div>
+        <div class="profit-box"><div class="profit-label">Status</div><div class="profit-val" id="ep-status">—</div></div>
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">📋 Observações e Upgrades</div>
+      <div class="ugl" id="edit-upgrades"></div>
+      <button class="addu" onclick="addEditUpgrade()">+ Adicionar observação</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+      <input type="checkbox" id="e-destaque" style="width:16px;height:16px;accent-color:var(--gold);cursor:pointer;">
+      <label for="e-destaque" style="font-size:11px;color:var(--muted);cursor:pointer;">⭐ Exibir nos destaques da página inicial</label>
+    </div>
+    <button class="savebtn" onclick="salvarEdit()">Salvar Alterações →</button>
+  </div>
+</div>
 </body>
 </html>
