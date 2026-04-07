@@ -373,7 +373,7 @@ function handlePhotos(files) {
   let done = 0;
   for (let i=0;i<add;i++) {
     const r = new FileReader();
-    r.onload = e => { photos.push(e.target.result); done++; if(done===add) renderPreviews(); };
+    r.onload = e => { comprimirImagem(e.target.result, c => { photos.push(c); done++; if(done===add) renderPreviews(); }); };
     r.readAsDataURL(files[i]);
   }
 }
@@ -462,7 +462,28 @@ function salvarCarro() {
   setTimeout(()=>showTab('manage'), 1800);
 }
 
-function salvar() { localStorage.setItem('ltm_cars_v2', JSON.stringify(cars)); }
+function salvar() {
+  try {
+    localStorage.setItem('ltm_cars_v2', JSON.stringify(cars));
+  } catch(e) {
+    throw new Error('localStorage cheio');
+  }
+}
+
+function comprimirImagem(dataUrl, callback) {
+  const img = new Image();
+  img.onload = function() {
+    const canvas = document.createElement('canvas');
+    const max = 1200;
+    let w = img.width, h = img.height;
+    if(w > max) { h = h*(max/w); w = max; }
+    if(h > max) { w = w*(max/h); h = max; }
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    callback(canvas.toDataURL('image/jpeg', 0.75));
+  };
+  img.src = dataUrl;
+}
 
 function resetForm() {
   ['f-brand','f-model','f-subtitle','f-price','f-cost','f-year','f-km','f-color','f-engine','f-power','f-gear','f-accel','f-vmax'].forEach(id=>document.getElementById(id).value='');
@@ -573,7 +594,7 @@ function handleEditPhotos(files) {
   let done = 0;
   for(let i=0; i<toAdd; i++) {
     const r = new FileReader();
-    r.onload = e => { editPhotos.push(e.target.result); done++; if(done===toAdd) renderEditPhotos(); };
+    r.onload = e => { comprimirImagem(e.target.result, c => { editPhotos.push(c); done++; if(done===toAdd) renderEditPhotos(); }); };
     r.readAsDataURL(files[i]);
   }
 }
@@ -662,10 +683,18 @@ function salvarEdit() {
   car.price=price; car.cost=document.getElementById('e-cost').value.trim();
   car.destaque=document.getElementById('e-destaque').checked;
   car.upgrades=[...document.querySelectorAll('#edit-upgrades .ui input')].map(i=>i.value.trim()).filter(Boolean);
-  car.photos = editPhotos.length > 0 ? editPhotos : car.photos;
-  salvar();
-  const a=document.getElementById('edit-alert');a.textContent='✅ Alterações salvas com sucesso!';a.className='alert success show';
-  setTimeout(()=>{a.classList.remove('show');fecharEdit();renderManage();renderStats();},1500);
+  if(editPhotos.length > 0) car.photos = editPhotos;
+  try {
+    salvar();
+    const a=document.getElementById('edit-alert');
+    a.textContent='✅ Alterações salvas com sucesso!';
+    a.className='alert success show';
+    setTimeout(()=>{a.classList.remove('show');fecharEdit();renderManage();renderStats();},1500);
+  } catch(err) {
+    const a=document.getElementById('edit-alert');
+    a.textContent='⚠️ Erro ao salvar: armazenamento cheio. Tente remover algumas fotos.';
+    a.className='alert error show';
+  }
 }
 </script>
 
