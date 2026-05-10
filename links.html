@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta property="og:title" content="LTM Automotive — Lucas Telles">
+<meta property="og:description" content="Intermediação exclusiva de blindados de luxo e superesportivos. Rio de Janeiro → Todo o Brasil.">
+<title>LTM Automotive — Lucas Telles</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --gold:#C9A84C;--gold-light:#E8D5A3;--gold-dim:rgba(201,168,76,0.2);
+  --black:#080808;--dark:#111;--dark2:#181818;
+  --text:#D0C9C0;--muted:#6A6560;
+}
+html,body{
+  min-height:100vh;
+  background:var(--black);
+  color:var(--text);
+  font-family:'Montserrat',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+}
+
+/* BG */
+.bg{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
+    var(--black);
+}
+.bg-line{
+  position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:1px;height:100%;
+  background:linear-gradient(to bottom,rgba(201,168,76,0.15),transparent 60%);
+  z-index:0;
+}
+
+/* WRAP */
+.wrap{
+  position:relative;z-index:1;
+  max-width:480px;margin:0 auto;
+  padding:48px 24px 60px;
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;
+}
+
+/* LOGO */
+.logo-area{
+  display:flex;flex-direction:column;align-items:center;
+  gap:12px;margin-bottom:8px;
+  animation:fadeDown 0.8s ease both;
+}
+.logo-icon{
+  width:72px;height:72px;
+  border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.logo-icon::before{
+  content:'';position:absolute;
+  top:4px;left:4px;right:4px;bottom:4px;
+  border:1px solid rgba(201,168,76,0.3);
+}
+.logo-icon svg{width:44px;height:44px;}
+.logo-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:300;
+  letter-spacing:6px;color:var(--text);
+  text-align:center;
+}
+.logo-name span{color:var(--gold);}
+.logo-sub{
+  font-size:8px;letter-spacing:5px;
+  text-transform:uppercase;color:var(--muted);
+  text-align:center;
+}
+
+/* DIVIDER */
+.divider{
+  width:80px;height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  margin:24px 0;
+  animation:fadeIn 1s ease 0.3s both;
+}
+
+/* PERFIL */
+.profile{
+  display:flex;flex-direction:column;align-items:center;
+  gap:8px;margin-bottom:32px;
+  animation:fadeDown 0.8s ease 0.2s both;
+}
+.profile-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:300;
+  color:var(--text);letter-spacing:2px;
+}
+.profile-desc{
+  font-size:11px;color:var(--muted);
+  text-align:center;line-height:1.8;
+  letter-spacing:0.5px;max-width:300px;
+}
+.profile-location{
+  font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);
+  margin-top:4px;
+}
+
+/* LINKS */
+.links{
+  width:100%;
+  display:flex;flex-direction:column;
+  gap:12px;
+  animation:fadeUp 0.8s ease 0.4s both;
+}
+
+.link-btn{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 22px;
+  border:1px solid rgba(201,168,76,0.15);
+  background:rgba(255,255,255,0.02);
+  text-decoration:none;
+  color:var(--text);
+  transition:all 0.3s;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+}
+.link-btn::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(201,168,76,0.06),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.link-btn:hover::before{opacity:1;}
+.link-btn:hover{
+  border-color:rgba(201,168,76,0.4);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+}
+.link-btn:active{transform:translateY(0);box-shadow:none;}
+
+/* Botão principal WhatsApp */
+.link-btn.primary{
+  border-color:var(--gold);
+  background:rgba(201,168,76,0.06);
+}
+.link-btn.primary .link-arrow{color:var(--gold);}
+
+.link-icon{
+  width:42px;height:42px;
+  border:1px solid rgba(201,168,76,0.2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:20px;
+  transition:all 0.3s;
+}
+.link-btn:hover .link-icon{
+  border-color:var(--gold);
+  background:rgba(201,168,76,0.1);
+}
+.link-btn.primary .link-icon{
+  border-color:var(--gold);
+  background:rgba(201,168,76,0.1);
+}
+
+.link-info{flex:1;}
+.link-title{
+  font-size:12px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--text);margin-bottom:3px;
+}
+.link-desc{
+  font-size:10px;color:var(--muted);
+  letter-spacing:0.5px;
+}
+.link-btn.primary .link-title{color:var(--gold);}
+
+.link-arrow{
+  font-size:16px;color:var(--muted);
+  transition:all 0.3s;
+}
+.link-btn:hover .link-arrow{
+  color:var(--gold);
+  transform:translateX(4px);
+}
+
+/* SEÇÃO CONTATO */
+.section-label{
+  font-size:8px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--muted);
+  margin:28px 0 14px;
+  display:flex;align-items:center;gap:12px;
+  width:100%;
+}
+.section-label::before,.section-label::after{
+  content:'';flex:1;height:1px;
+  background:rgba(201,168,76,0.15);
+}
+
+/* STATS */
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2px;width:100%;margin:28px 0;
+  animation:fadeUp 0.8s ease 0.6s both;
+}
+.stat{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(201,168,76,0.1);
+  padding:16px 10px;text-align:center;
+}
+.stat-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:300;
+  color:var(--gold);line-height:1;
+  margin-bottom:6px;
+}
+.stat-l{
+  font-size:7px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--muted);
+}
+
+/* FOOTER */
+.footer{
+  margin-top:40px;
+  display:flex;flex-direction:column;
+  align-items:center;gap:10px;
+  animation:fadeIn 1s ease 0.8s both;
+}
+.footer-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:14px;letter-spacing:4px;color:var(--muted);
+}
+.footer-logo span{color:var(--gold);}
+.footer-copy{
+  font-size:9px;letter-spacing:1px;
+  color:rgba(255,255,255,0.2);text-align:center;
+}
+
+/* ANIMATIONS */
+@keyframes fadeDown{
+  from{opacity:0;transform:translateY(-20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* PULSE no botão WA */
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,0.3);}
+  50%{box-shadow:0 0 0 8px rgba(37,211,102,0);}
+}
+.link-btn.primary{animation:pulse 2.5s infinite;}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="bg-line"></div>
+
+<div class="wrap">
+
+  <!-- LOGO -->
+  <div class="logo-area">
+    <div class="logo-icon">
+      <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="42" height="42" stroke="#C9A84C" stroke-width="1.2"/>
+        <text x="22" y="29" text-anchor="middle"
+          font-family="Cormorant Garamond, serif"
+          font-size="16" fill="#C9A84C" letter-spacing="2">LTM</text>
+      </svg>
+    </div>
+    <div class="logo-name">LTM<span>.</span></div>
+    <div class="logo-sub">Automotive</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PERFIL -->
+  <div class="profile">
+    <div class="profile-name">Lucas Telles</div>
+    <div class="profile-desc">
+      Intermediação exclusiva de blindados de luxo e superesportivos com discrição e procedência garantida.
+    </div>
+    <div class="profile-location">📍 Rio de Janeiro → Todo o Brasil</div>
+  </div>
+
+  <!-- LINKS PRINCIPAIS -->
+  <div class="links">
+
+    <!-- WhatsApp — CTA Principal -->
+    <a class="link-btn primary"
+       href="https://wa.me/5521979392718?text=Olá%20Lucas%2C%20vim%20pelo%20Instagram%20e%20quero%20ver%20o%20catálogo%20completo%20de%20veículos."
+       target="_blank">
+      <div class="link-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </div>
+      <div class="link-info">
+        <div class="link-title">Ver Catálogo Completo</div>
+        <div class="link-desc">+20 veículos disponíveis · Fale agora no WhatsApp</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <!-- Site -->
+    <a class="link-btn"
+       href="https://telleslu30-sketch.github.io/ltmblindados"
+       target="_blank">
+      <div class="link-icon">🌐</div>
+      <div class="link-info">
+        <div class="link-title">Site LTM Automotive</div>
+        <div class="link-desc">Estoque completo com fotos e especificações</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <div class="section-label">Contato direto</div>
+
+    <!-- Solicitar veículo -->
+    <a class="link-btn"
+       href="https://wa.me/5521979392718?text=Olá%20Lucas%2C%20estou%20procurando%20um%20veículo%20específico%20e%20gostaria%20de%20sua%20ajuda."
+       target="_blank">
+      <div class="link-icon">🔍</div>
+      <div class="link-info">
+        <div class="link-title">Solicitar Veículo Específico</div>
+        <div class="link-desc">Não encontrou? Busco para você na minha rede</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <!-- Blindados -->
+    <a class="link-btn"
+       href="https://wa.me/5521979392718?text=Olá%20Lucas%2C%20tenho%20interesse%20em%20veículos%20blindados%20de%20luxo.%20Pode%20me%20ajudar?"
+       target="_blank">
+      <div class="link-icon">🛡</div>
+      <div class="link-info">
+        <div class="link-title">Blindados de Luxo</div>
+        <div class="link-desc">Mercedes, BMW, Porsche, Range Rover blindados</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <!-- Superesportivos -->
+    <a class="link-btn"
+       href="https://wa.me/5521979392718?text=Olá%20Lucas%2C%20tenho%20interesse%20em%20superesportivos.%20Pode%20me%20ajudar?"
+       target="_blank">
+      <div class="link-icon">🏎</div>
+      <div class="link-info">
+        <div class="link-title">Superesportivos</div>
+        <div class="link-desc">Ferrari, Lamborghini, Porsche GT, McLaren</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+    <div class="section-label">Redes sociais</div>
+
+    <!-- Instagram -->
+    <a class="link-btn"
+       href="https://instagram.com/lucastellesltm_au"
+       target="_blank">
+      <div class="link-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <defs>
+            <linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#f09433"/>
+              <stop offset="25%" style="stop-color:#e6683c"/>
+              <stop offset="50%" style="stop-color:#dc2743"/>
+              <stop offset="75%" style="stop-color:#cc2366"/>
+              <stop offset="100%" style="stop-color:#bc1888"/>
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig)" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="4" stroke="url(#ig)" stroke-width="1.5"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="url(#ig)"/>
+        </svg>
+      </div>
+      <div class="link-info">
+        <div class="link-title">Instagram</div>
+        <div class="link-desc">@lucastellesltm_au · 515k+ visualizações</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-n">515K</div>
+      <div class="stat-l">Views / 90 dias</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">20+</div>
+      <div class="stat-l">Veículos disponíveis</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">100%</div>
+      <div class="stat-l">Procedência</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-logo">LTM<span>.</span> Automotive</div>
+    <div class="footer-copy">Rio de Janeiro · Brasil · © 2026</div>
+  </div>
+
+</div>
+
+</body>
+</html>
